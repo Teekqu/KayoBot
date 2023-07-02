@@ -34,15 +34,15 @@ public class Ready extends ListenerAdapter {
     private Runnable statusTask(JDA jda) {
         return () -> {
 
-            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("on "+jda.getGuilds().size()+" Servers"));
+            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("auf "+jda.getGuilds().size()+" Servern"));
             try { Thread.sleep(60000); } catch (Exception ignored) { }
-            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("the boss"));
+            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("den Chef"));
             try { Thread.sleep(60000); } catch (Exception ignored) { }
-            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("with "+jda.getUsers().size()+" Users"));
+            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("mit "+jda.getUsers().size()+" Usern"));
             try { Thread.sleep(60000); } catch (Exception ignored) { }
-            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("around with rights"));
+            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("mit Rechten rum"));
             try { Thread.sleep(60000); } catch (Exception ignored) { }
-            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("with slash commands"));
+            jda.getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("mit Slash Commands"));
             try { Thread.sleep(60000); } catch (Exception ignored) { }
 
         };
