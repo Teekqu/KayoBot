@@ -85,7 +85,7 @@ public class setupStuff extends ListenerAdapter {
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle("Vorschlag von "+u.getUsername())
                 .setDescription("**Name:** "+e.getValue("beta.suggestion.modal.name").getAsString()+"\n**Description:**\n"+e.getValue("beta.suggestion.modal.description").getAsString())
-                .setColor(utils.Get.getColor())
+                .setColor(utils.Get.embedColor())
                 .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                 .setThumbnail(u.getEffectiveAvatarUrl())
                 .setFooter(e.getGuild().getName(), e.getGuild().getIconUrl());
