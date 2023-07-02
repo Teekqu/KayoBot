@@ -27,7 +27,13 @@ public class addEmoji extends ListenerAdapter {
         InteractionHook ih = e.deferReply(true).complete();
 
         String emoji1 = e.getOption("emoji").getAsString();
-        CustomEmoji emoji = Emoji.fromFormatted(emoji1).asCustom();
+        CustomEmoji emoji;
+        try {
+            emoji = Emoji.fromFormatted(emoji1).asCustom();
+        } catch (Exception err) {
+            ih.editOriginalEmbeds(Embeds.error(g, u, "Ungültiges Emoji")).queue();
+            return;
+        }
         if(emoji.getName().equals(emoji.getFormatted())) {
             ih.editOriginalEmbeds(Embeds.error(g, u, "Ungültiges Emoji")).queue();
             return;
