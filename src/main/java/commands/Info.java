@@ -10,7 +10,7 @@ public class Info extends ListenerAdapter {
         if(!e.getName().equals("info")) return;
         if(e.getGuild() == null || e.getMember() == null) return;
 
-
+        
 
     }
 
