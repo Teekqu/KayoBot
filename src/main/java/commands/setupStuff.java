@@ -24,9 +24,8 @@ public class setupStuff extends ListenerAdapter {
         if(!e.getMember().hasPermission(Permission.ADMINISTRATOR)) return;
 
         Button btn1 = Button.success("beta.btn.sendSuggestion.de", "Einsenden").withEmoji(Emoji.fromFormatted("<:german:1125047342479970334>"));
-        Button btn2 = Button.success("beta.btn.sendSuggestion.en", "Submit").withEmoji(Emoji.fromFormatted("<:england:1125047717312331808>"));
 
-        e.getMessage().getChannel().sendMessage("⠀").addActionRow(btn1, btn2).queue();
+        e.getMessage().getChannel().sendMessage("⠀").addActionRow(btn1).queue();
 
     }
 
