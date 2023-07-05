@@ -1,6 +1,7 @@
 package commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Icon;
 import net.dv8tion.jda.api.entities.emoji.CustomEmoji;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -23,6 +24,11 @@ public class addEmoji extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
 
         if(u.isBlocked()) return;
+
+        if(!e.getMember().hasPermission(Permission.MANAGE_EMOJIS_AND_STICKERS)) {
+            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
+            return;
+        }
 
         InteractionHook ih = e.deferReply(true).complete();
 
