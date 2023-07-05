@@ -3,6 +3,8 @@ package utils;
 public class Emojis {
 
     public static String kayoNormal() { return "<:Kayo:1125023200426864640>"; }
+    public static String left() { return "<:k_left:1125860607091019897>"; }
+    public static String right() { return "<:k_right:1125860608542253157>"; }
     public static String activities() { return "<:k_activities:1125021039412400168>"; }
     public static String awardcup() { return "<:k_awardcup:1125021035394244689>"; }
     public static String archive() { return "<:k_archive:1125021042398740541>"; }
@@ -31,6 +33,7 @@ public class Emojis {
     public static String join() { return "<:k_join:1125021000761876521>"; }
     public static String no() { return "<:k_no:1125021008257101924>"; }
     public static String partner() { return "<:k_partner:1125021046450442300>"; }
+    public static String pin() { return "<:k_pin:1125865303205761185>"; }
     public static String pen() { return "<:k_pen:1125021011025334332>"; }
     public static String user() { return "<:k_user:1125021020668043295>"; }
     public static String reply() { return "<:k_reply:1125021026548469880>"; }
