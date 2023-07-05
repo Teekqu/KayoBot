@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
+import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
@@ -118,6 +119,89 @@ public class KGuild {
         Statement stm = MySQL.connect();
         try {
             stm.execute("UPDATE AutoDelete SET seconds="+seconds+",delPins='"+deletePins+"',delBots='"+deleteBots+"',delUser='"+deleteUser+"' WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+
+    public Collection<GuildMessageChannel> getAutoReact() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<GuildMessageChannel> channels = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId());
+            while(rs.next()) {
+                Channel ch = this.g.getGuildChannelById(rs.getString(2));
+                if(ch == null) continue;
+                if(!channels.contains(ch)) channels.add((GuildMessageChannel) ch);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return channels;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public Collection<Emoji> getAutoReact(GuildMessageChannel ch) {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<Emoji> emojis = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            while(rs.next()) {
+
+                String emoji1 = rs.getString(3);
+                Emoji emoji;
+                try { emoji = Emoji.fromFormatted(emoji1); } catch (Exception err) { continue; }
+                emojis.add(emoji);
+
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            if(emojis.size()==0) return null;
+            return emojis;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public boolean addAutoReact(GuildMessageChannel ch, Emoji emoji) {
+
+        if(this.getAutoReact(ch)!=null && this.getAutoReact(ch).equals(emoji)) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("INSERT INTO AutoReact(guildId, channelId, emoji) VALUES("+this.getId()+","+ch.getId()+",'"+emoji.getFormatted()+"');");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+
+    }
+    public boolean removeAutoReact(GuildMessageChannel ch, Emoji emoji) {
+        System.out.println(emoji.getFormatted());
+        if(this.getAutoReact(ch)==null || !this.getAutoReact(ch).contains(emoji)) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM AutoReact WHERE guildId="+this.getId()+" AND channelId="+ch.getId()+" AND emoji='"+emoji.getFormatted()+"'");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean removeAutoReact(GuildMessageChannel ch) {
+        if(this.getAutoReact(ch)==null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM AutoReact WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
