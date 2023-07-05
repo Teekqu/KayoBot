@@ -120,10 +120,6 @@ public class AutoDelete extends ListenerAdapter {
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
-
-            Button btn1 = Button.primary("autodelete.btn.site.left", Emoji.fromFormatted(Emojis.left())).withDisabled(true);
-            Button btn2 = Button.primary("autodelete.btn.site.show", "1/1").withDisabled(true);
-            Button btn3 = Button.primary("autodelete.btn.site.right", Emoji.fromFormatted(Emojis.right())).withDisabled(true);
             boolean disabled = false;
             if(options.size() == 0) {
                 options.add(SelectOption.of("None", "none.none.none"));
@@ -136,7 +132,7 @@ public class AutoDelete extends ListenerAdapter {
                     .setMaxValues(1)
                     .setPlaceholder("📌 | Wähle einen Kanal zum bearbeiten")
                     .build();
-            ih.editOriginalEmbeds(embed.build()).setActionRow(btn1, btn2, btn3).setActionRow(sm).queue();
+            ih.editOriginalEmbeds(embed.build()).setActionRow(sm).queue();
 
         }
 
@@ -151,7 +147,7 @@ public class AutoDelete extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
 
         if(!e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
-            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).queue();
+            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
             return;
         }
 
@@ -211,7 +207,7 @@ public class AutoDelete extends ListenerAdapter {
         this.activeUsers.add(u.getIdLong());
 
         if(!e.getMember().hasPermission(Permission.MANAGE_CHANNEL)) {
-            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).queue();
+            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
             this.activeUsers.remove(u.getIdLong());
             return;
         }
