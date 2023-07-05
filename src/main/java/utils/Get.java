@@ -1,6 +1,8 @@
 package utils;
 
 import java.awt.*;
+import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class Get {
 
@@ -22,6 +24,26 @@ public class Get {
     }
     public static long topggVotes() {
         return 0;
+    }
+
+    public static int limit(String id, boolean hasPremium) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM Limits WHERE id='"+id+"';");
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return 0;
+            }
+            int normaly = Integer.parseInt(rs.getString("count"));
+            int premium = Integer.parseInt(rs.getString("countPremium"));
+            try { stm.close(); } catch (Exception ignored) { }
+            if(hasPremium) return premium;
+            return normaly;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return 0;
+        }
     }
 
 }
