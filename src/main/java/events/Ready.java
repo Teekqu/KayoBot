@@ -4,9 +4,12 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
+import net.dv8tion.jda.api.interactions.commands.build.OptionData;
+import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import utils.KUser;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
@@ -44,6 +47,23 @@ public class Ready extends ListenerAdapter {
         g.upsertCommand("add-emoji", "Füge ein Emoji zum Server hinzu")
                 .addOption(OptionType.STRING, "emoji", "Gebe ein Emoji an", true)
                 .addOption(OptionType.STRING, "name", "Gebe einen Namen für das Emoji an", false)
+                .setGuildOnly(true).queue();
+
+        OptionData createautodeletedata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Kanal", true)
+                .setChannelTypes(ChannelType.TEXT);
+        OptionData createautodeletedata2 = new OptionData(OptionType.INTEGER, "time", "Gebe eine Zeit an", true);
+        OptionData createautodeletedata3 = new OptionData(OptionType.STRING, "unit", "Wähle eine Einheit", true)
+                .addChoice("Sekunde/n", "s")
+                .addChoice("Minute/n", "m")
+                .addChoice("Stunde/n", "h")
+                .addChoice("Tag/e", "d");
+        SubcommandData createautodeletecmd = new SubcommandData("add", "Füge einen AutoDelete Kanal hinzu")
+                .addOptions(createautodeletedata1, createautodeletedata2, createautodeletedata3);
+
+        SubcommandData showautodeletecmd = new SubcommandData("show", "Siehe alle AutoDelete Channel und bearbeiten diese");
+
+        g.upsertCommand("autodelete", "Verwalte das AutoDelete System")
+                .addSubcommands(createautodeletecmd, showautodeletecmd)
                 .setGuildOnly(true).queue();
 
     }
