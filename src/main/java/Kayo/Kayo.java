@@ -34,6 +34,7 @@ public class Kayo {
         jda.addEventListener(new commands.addEmoji());
 
         // Functions
+        jda.addEventListener(new functions.AutoDelete());
 
     }
 
