@@ -66,6 +66,18 @@ public class Ready extends ListenerAdapter {
                 .addSubcommands(createautodeletecmd, showautodeletecmd)
                 .setGuildOnly(true).queue();
 
+
+        OptionData createautoreactdata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Kanal", true)
+                .setChannelTypes(ChannelType.TEXT);
+        OptionData createautoreactdata2 = new OptionData(OptionType.STRING, "emoji", "Gebe ein Emoji an", true);
+        SubcommandData createautoreactcmd = new SubcommandData("add", "Füge AutoReact zu einem Kanal hinzu")
+                .addOptions(createautoreactdata1, createautoreactdata2);
+
+        SubcommandData showautoreactcmd = new SubcommandData("show", "Siehe alle AutoReact Channel und bearbeite diese");
+
+        g.upsertCommand("autoreact", "Verwalte das AutoReact System")
+                .addSubcommands(createautoreactcmd, showautoreactcmd)
+                .setGuildOnly(true).queue();
     }
 
     private Runnable statusTask(JDA jda) {
