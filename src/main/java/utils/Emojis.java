@@ -19,6 +19,7 @@ public class Emojis {
     public static String delete() { return "<:k_delete:1125020992150970409>"; }
     public static String download() { return "<:k_download:1125020993623171072>"; }
     public static String earth() { return "<:k_earth:1125020994797572097>"; }
+    public static String emoji() { return "<:reaction:947918742124372030>"; }
     public static String help() { return "<:k_help:1125020995938426892>"; }
     public static String idee() { return "<:k_idee:1125020997679071283>"; }
     public static String info() { return "<:k_info:1125020999184826420>"; }
