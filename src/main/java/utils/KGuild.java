@@ -211,4 +211,25 @@ public class KGuild {
         }
     }
 
+    public Collection<HashMap<String, String>> getAutoResponse() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<HashMap<String, String>> maps = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId());
+            while(rs.next()) {
+                HashMap<String, String> map = new HashMap<>();
+                map.put("channelId", rs.getString(2));
+                map.put("trigger", rs.getString(3));
+                map.put("answer", rs.getString(4));
+                maps.add(map);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return maps;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+
 }
