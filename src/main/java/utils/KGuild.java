@@ -271,5 +271,18 @@ public class KGuild {
             return false;
         }
     }
+    public boolean removeAutoResponse(long id) {
+        Statement stm = MySQL.connect();
+        try {
+            if(this.getAutoResponse(id)==null) return false;
+            stm.execute("DELETE FROM AutoResponse WHERE guildId="+this.getId()+" AND id="+id);
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
 
 }
