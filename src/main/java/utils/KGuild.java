@@ -218,9 +218,10 @@ public class KGuild {
             ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId());
             while(rs.next()) {
                 HashMap<String, String> map = new HashMap<>();
-                map.put("channelId", rs.getString(2));
-                map.put("trigger", rs.getString(3));
-                map.put("answer", rs.getString(4));
+                map.put("id", rs.getString(2));
+                map.put("channelId", rs.getString(3));
+                map.put("trigger", rs.getString(4));
+                map.put("answer", rs.getString(5));
                 maps.add(map);
             }
             try { stm.close(); } catch (Exception ignored) { }
@@ -229,6 +230,45 @@ public class KGuild {
             try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getAutoResponse(long id) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId()+" AND id="+id);
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("id", rs.getString(2));
+            map.put("channelId", rs.getString(3));
+            map.put("trigger", rs.getString(4));
+            map.put("answer", rs.getString(5));
+            return map;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public boolean addAutoResponse(long id, GuildMessageChannel ch, String trigger, String answer) {
+        return this.addAutoResponse(id, ch.getIdLong(), trigger, answer);
+    }
+    public boolean addAutoResponse(long id, String trigger, String answer) {
+        return this.addAutoResponse(id, 0, trigger, answer);
+    }
+    private boolean addAutoResponse(long id, long channelId, String trigger, String answer) {
+        Statement stm = MySQL.connect();
+        try {
+            if(this.getAutoResponse(id)!=null) return false;
+            stm.execute("INSERT INTO AutoResponse(guildId, id, channelId, trigger, answer) VALUES("+this.getId()+","+id+","+channelId+",'"+trigger+"','"+answer+"');");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
         }
     }
 
