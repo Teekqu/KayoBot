@@ -13,6 +13,32 @@ public class Get {
         if(success) return Color.decode("#00ff00");
         return Color.decode("#ff0000");
     }
+    public static Long id(String key, boolean addOne) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT value FROM IDs WHERE key="+key+";");
+            if(!rs.next()) {
+                if(addOne) {
+                    stm.execute("INSERT INTO IDs(key, value) VALUES('"+key+"',1);");
+                    try { stm.close(); } catch (Exception ignored) { }
+                    return 1L;
+                }
+                return 0L;
+            }
+            long value = Long.parseLong(rs.getString(1));
+            if(addOne) {
+                stm.execute("UPDATE IDs SET value="+(value+1)+" WHERE key='"+key+"';");
+                try { stm.close(); } catch (Exception ignored) { }
+                return (value+1);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return value;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
     public static KUser timo() {
         return new KUser(Kayo.Kayo.getJda().getUserById("473737542630637569"));
     }
