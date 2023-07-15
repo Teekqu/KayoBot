@@ -1,6 +1,7 @@
 package utils;
 
 import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -211,40 +212,67 @@ public class KGuild {
         }
     }
 
-    public Collection<HashMap<String, String>> getAutoResponse() {
+    public Collection<Role> getJoinRolesList() {
         Statement stm = MySQL.connect();
         try {
-            Collection<HashMap<String, String>> maps = new ArrayList<>();
-            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId());
+            Collection<Role> roles = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM JoinRoles WHERE guildId="+this.getId());
             while(rs.next()) {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("id", rs.getString(2));
-                map.put("channelId", rs.getString(3));
-                map.put("trigger", rs.getString(4));
-                map.put("answer", rs.getString(5));
-                maps.add(map);
+                Role r = this.g.getRoleById(rs.getString(2));
+                if(r == null) continue;
+                if(!roles.contains(r)) roles.add(r);
             }
             try { stm.close(); } catch (Exception ignored) { }
-            return maps;
+            return roles;
         } catch (Exception err) {
             try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return new ArrayList<>();
         }
     }
-    public HashMap<String, String> getAutoResponse(long id) {
+    public Collection<HashMap<String, String>> getJoinRoles() {
         Statement stm = MySQL.connect();
         try {
-            ResultSet rs = stm.executeQuery("SELECT * FROM AutoReact WHERE guildId="+this.getId()+" AND id="+id);
+            Collection<HashMap<String, String>> roles = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM JoinRoles WHERE guildId="+this.getId());
+            while(rs.next()) {
+                Role r = this.g.getRoleById(rs.getString(2));
+                if(r == null) continue;
+                HashMap<String, String> map = new HashMap<>();
+                map.put("guildId", this.getId());
+                map.put("roleId", r.getId());
+                map.put("addUser", rs.getString(3));
+                map.put("addBot", rs.getString(4));
+                map.put("afterVerify", rs.getString(5));
+                if(!roles.contains(map)) roles.add(map);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return roles;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getJoinRole(Role role) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM JoinRoles WHERE guildId="+this.getId()+" AND roleId="+role.getId());
             if(!rs.next()) {
                 try { stm.close(); } catch (Exception ignored) { }
                 return null;
             }
+            Role r = this.g.getRoleById(rs.getString(2));
+            if(r == null) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
             HashMap<String, String> map = new HashMap<>();
-            map.put("id", rs.getString(2));
-            map.put("channelId", rs.getString(3));
-            map.put("trigger", rs.getString(4));
-            map.put("answer", rs.getString(5));
+            map.put("guildId", this.getId());
+            map.put("roleId", r.getId());
+            map.put("addUser", rs.getString(3));
+            map.put("addBot", rs.getString(4));
+            try { stm.close(); } catch (Exception ignored) { }
             return map;
         } catch (Exception err) {
             try { stm.close(); } catch (Exception ignored) { }
@@ -252,17 +280,11 @@ public class KGuild {
             return null;
         }
     }
-    public boolean addAutoResponse(long id, GuildMessageChannel ch, String trigger, String answer) {
-        return this.addAutoResponse(id, ch.getIdLong(), trigger, answer);
-    }
-    public boolean addAutoResponse(long id, String trigger, String answer) {
-        return this.addAutoResponse(id, 0, trigger, answer);
-    }
-    private boolean addAutoResponse(long id, long channelId, String trigger, String answer) {
+    public boolean addJoinRole(Role role, boolean addUser, boolean addBot) {
+        if(this.getJoinRole(role)!=null) return false;
         Statement stm = MySQL.connect();
         try {
-            if(this.getAutoResponse(id)!=null) return false;
-            stm.execute("INSERT INTO AutoResponse(guildId, id, channelId, trigger, answer) VALUES("+this.getId()+","+id+","+channelId+",'"+trigger+"','"+answer+"');");
+            stm.execute("INSERT INTO JoinRoles(guildId, roleId, addUser, addBot) VALUES("+this.getId()+","+role.getId()+",'"+addUser+"','"+addBot+"');");
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
@@ -271,11 +293,11 @@ public class KGuild {
             return false;
         }
     }
-    public boolean removeAutoResponse(long id) {
+    public boolean editJoinRole(Role role, boolean addUser, boolean addBot) {
+        if(this.getJoinRole(role)==null) return false;
         Statement stm = MySQL.connect();
         try {
-            if(this.getAutoResponse(id)==null) return false;
-            stm.execute("DELETE FROM AutoResponse WHERE guildId="+this.getId()+" AND id="+id);
+            stm.execute("UPDATE JoinRoles SET addUser='"+addUser+"', addBot='"+addBot+"' WHERE guildId="+this.getId()+" AND roleId="+role.getId());
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
@@ -283,6 +305,21 @@ public class KGuild {
             err.printStackTrace();
             return false;
         }
+    }
+    public boolean removeJoinRole(Role role) {
+
+			if(this.getJoinRole(role)==null) return false;
+			Statement stm = MySQL.connect();
+			try {
+                stm.execute("DELETE FROM JoinRoles WHERE guildId="+this.getId()+" AND roleId="+role.getId());
+			    try { stm.close(); } catch(Exception ignored) { }
+			    return true;
+			} catch(Exception err) {
+			    try { stm.close(); } catch(Exception ignored) { }
+			    err.printStackTrace();
+			    return false;
+			}
+
     }
 
 }
