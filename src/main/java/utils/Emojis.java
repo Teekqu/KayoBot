@@ -54,4 +54,27 @@ public class Emojis {
     public static String supportman() { return "<:k_supportman:1125021017815912468>"; }
     public static String stats() { return "<:k_stats:1125021019216810079>"; }
 
+
+    /* EMOJI SERVER */
+    public static String activeDev() { return "<:activeDev:1130187719163785306>"; }
+    public static String verifiedDev() { return "<:verifiedDev:1130187812910682273>"; }
+    public static String slashBadge() { return "<:slashBadge:1130191692264374413>"; }
+    public static String verifiedBot() { return "<:verifiedBot:1130194528763129917>"; }
+    public static String hypesquad() { return "<:hypesquad:1130187200336769054>"; }
+    public static String balance() { return "<:balance:1130187310529519636>"; }
+    public static String bravery() { return "<:bravery:1130187388761673890>"; }
+    public static String brilliance() { return "<:brilliance:1130187439068155945>"; }
+    public static String bugHunter() { return "<:bugHunter:1130187873681932288>"; }
+    public static String bugHunterGold() { return "<:bugHunterGold:1130187917705367635>"; }
+    public static String earlySup() { return "<:earlySup:1130188040132907049>"; }
+    public static String partnerBadge() { return "<:partner:1130188279174680697>"; }
+    public static String oldModAlumni() { return "<:oldModAlumni:1130187671352905839>"; }
+    public static String modAlumni() { return "<:modAlumni:1130187622514434138>"; }
+    public static String nitroBasic() { return "<:nitroBasic:1130187152186167306>"; }
+    public static String offline() { return "<:offline:1130188089906704494>"; }
+    public static String idle() { return "<:idle:1130188138703224892>"; }
+    public static String dnd() { return "<:dnd:1130188184861560862>"; }
+    public static String online() { return "<:online:1130188237898514504>"; }
+
+
 }
