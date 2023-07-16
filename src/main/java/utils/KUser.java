@@ -41,5 +41,11 @@ public class KUser {
     public boolean isBlocked() {
         return false;
     }
+    public boolean isBot() {
+        return this.u.isBot();
+    }
+    public boolean isSystem() {
+        return this.u.isSystem();
+    }
 
 }
