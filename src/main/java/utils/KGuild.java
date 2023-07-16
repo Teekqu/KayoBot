@@ -1,7 +1,6 @@
 package utils;
 
-import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.Role;
+import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -9,13 +8,30 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 
 public class KGuild {
 
     private Guild g;
+
+    private int getUserCountPrivate() {
+        int users = 0;
+        for(Member u : g.getMembers()) {
+            if(!u.getUser().isBot()) users++;
+        }
+        return users;
+    }
+    private int getBotCountPrivate() {
+        int bots = 0;
+        for(Member u : g.getMembers()) {
+            if(u.getUser().isBot()) bots++;
+        }
+        return bots;
+    }
 
     public KGuild(Guild guild) {
         this.g = guild;
@@ -33,6 +49,18 @@ public class KGuild {
     public String getIconUrl() {
         return this.g.getIconUrl();
     }
+    public Member getOwner() { return this.g.getOwner(); }
+    public String getOwnerId() { return this.g.getOwnerId(); }
+    public Long getOwnerIdLong() { return this.g.getOwnerIdLong(); }
+    public int getMemberCount() { return this.g.getMemberCount(); }
+    public int getUserCount() { return this.getUserCountPrivate(); }
+    public int getBotCount() { return this.getBotCountPrivate(); }
+    public int getBoostCount() { return this.g.getBoostCount(); }
+    public Guild.BoostTier getBoostTier() { return this.g.getBoostTier(); }
+    public Collection<Member> getBoosters() { return this.g.getBoosters(); }
+    public List<GuildChannel> getChannels() { return this.g.getChannels(); }
+    public List<Role> getRoles() { return this.g.getRoles(); }
+    public OffsetDateTime getTimeCreated() { return this.g.getTimeCreated(); }
 
     public boolean hasPremium() {
         return false;
