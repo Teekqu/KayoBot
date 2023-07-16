@@ -88,6 +88,10 @@ public class Ready extends ListenerAdapter {
                 .setGuildOnly(true).queue();
         g.upsertCommand("joinroles", "Siehe alle JoinRoles und bearbeite diese")
                 .setGuildOnly(true).queue();
+
+
+        SubcommandData automodrulescmd = new SubcommandData("rules", "Verwalte die AutoMod Regeln");
+        g.upsertCommand("automod", "Verwalte das AutoMod System von Discord").addSubcommands(automodrulescmd).setGuildOnly(true).queue();
     }
 
     private Runnable statusTask(JDA jda) {
