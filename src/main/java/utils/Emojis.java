@@ -9,6 +9,7 @@ public class Emojis {
     public static String awardcup() { return "<:k_awardcup:1125021035394244689>"; }
     public static String archive() { return "<:k_archive:1125021042398740541>"; }
     public static String bot() { return "<:k_bot:1130139150054604821>"; }
+    public static String boost() { return "<:k_boost:1130145629599961098>"; }
     public static String bugs() { return "<:k_bugs:1125021036879040564>"; }
     public static String calendar() { return "<:k_calendar:1125021033603276820>"; }
     public static String channel() { return "<:k_channel:1125021038120538183>"; }
@@ -21,10 +22,9 @@ public class Emojis {
     public static String earth() { return "<:k_earth:1125020994797572097>"; }
     public static String emoji() { return "<:reaction:947918742124372030>"; }
     public static String help() { return "<:k_help:1125020995938426892>"; }
-    public static String idee() { return "<:k_idee:1125020997679071283>"; }
+    public static String idea() { return "<:k_idea:1125020997679071283>"; }
     public static String info() { return "<:k_info:1125020999184826420>"; }
     public static String news() { return "<:k_news:1125021040788111370>"; }
-    public static String mute() { return "<:k_mute:1125021029245399171>"; }
     public static String mail() { return "<:k_mail:1125021006516469850>"; }
     public static String loading() { return "<:k_loading:1125021030767927397>"; }
     public static String list() { return "<:k_list:1125021005321076808>"; }
