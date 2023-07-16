@@ -9,6 +9,8 @@ import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import utils.*;
 
+import java.util.*;
+
 public class JoinRoles extends ListenerAdapter {
 
     public void onSlashCommandInteraction(SlashCommandInteractionEvent e) {
@@ -49,6 +51,48 @@ public class JoinRoles extends ListenerAdapter {
                     .setThumbnail(e.getGuild().getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
             ih.editOriginalEmbeds(embed.build()).queue();
+
+        } else if(e.getSubcommandName().equals("show")) {
+
+            InteractionHook ih = e.deferReply(true).complete();
+
+            Collection<Role> roles = g.getJoinRolesList();
+            StringBuilder sb = new StringBuilder();
+
+            long count = 0L;
+            Collection<SelectOption> options = new ArrayList();
+            roles.forEach(role => {
+                count = count+1;
+                sb.append("`"+count+".` **|** "+role.getAsMention()+"\n");
+                String name = role.getName();
+                if(name.length()>20) name = role.getName().substring(0, 20)+"...";
+                options.add(SelectOption.of(name, "joinroles.select.show."+role.getId()));
+            });
+
+            if(sb.toString().equals("")) sb.append(Emojis.warning()+" *Es wurden keine Einträge gefunden!*");
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle(Emojis.role() + " | **JoinRoles**")
+                    .setDescription(sb.toString())
+                    .setColor(Get.embedColor())
+                    .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
+                    .setThumbnail(g.getIconUrl())
+                    .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
+            boolean disabled = false;
+            if(options.size() == 0) {
+                options.add(SelectOption.of("None", "none.none.none"));
+                disabled = true;
+            }
+            StringSelectMenu sm = StringSelectMenu.create("joinroles.select.show")
+                    .addOptions(options)
+                    .setDisabled(disabled)
+                    .setMinValues(1)
+                    .setMaxValues(1)
+                    .setPlaceholder("📌 | Wähle eine Rolle zum bearbeiten")
+                    .build();
+            ih.editOriginalEmbeds(embed.build()).setActionRow(sm).queue();
+
+
 
         }
 
