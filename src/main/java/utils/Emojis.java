@@ -38,6 +38,7 @@ public class Emojis {
     public static String pen() { return "<:k_pen:1125021011025334332>"; }
     public static String user() { return "<:k_user:1125021020668043295>"; }
     public static String reply() { return "<:k_reply:1125021026548469880>"; }
+    public static String role() { return ""; }
     public static String search() { return "<:k_search:1125021027999678475>"; }
     public static String settings() { return "<:k_settings:1125021024900100166>"; }
     public static String share() { return "<:k_share:1125021023457247273>"; }
