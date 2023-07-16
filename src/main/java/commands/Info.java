@@ -37,7 +37,7 @@ public class Info extends ListenerAdapter {
 
                 .addBlankField(false)
                 .addField(Emojis.kayo()+" - Name", bot.getName(), true)
-                .addField(Emojis.idee()+" - ID", bot.getId(), true)
+                .addField(Emojis.idea()+" - ID", bot.getId(), true)
                 .addField(Emojis.crone()+" - Entwickler", "["+Get.timo().getUsername()+"]("+Get.timo().getProfileUrl()+")", true)
                 .addBlankField(false)
                 .addField(Emojis.clock()+" - Erstellt", "<t:"+TimeFormat.RELATIVE.atInstant(bot.getTimeCreated().toInstant()).toInstant().getEpochSecond()+">", true)
