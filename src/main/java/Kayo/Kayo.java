@@ -38,6 +38,7 @@ public class Kayo {
         jda.addEventListener(new functions.AutoDelete());
         jda.addEventListener(new functions.AutoReact());
         jda.addEventListener(new functions.JoinRoles());
+        jda.addEventListener(new functions.AutoMod());
 
     }
 
