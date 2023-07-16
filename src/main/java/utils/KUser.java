@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.entities.User;
 
 import java.time.Instant;
 import java.time.OffsetDateTime;
+import java.util.Collection;
 
 public class KUser {
 
@@ -36,6 +37,10 @@ public class KUser {
     }
     public OffsetDateTime getTimeCreated() {
         return this.u.getTimeCreated();
+    }
+    public Collection<User.UserFlag> getUserFlags() { return this.u.getFlags(); }
+    public User.Profile getProfile() {
+        return this.u.retrieveProfile().complete();
     }
 
     public boolean isBlocked() {
