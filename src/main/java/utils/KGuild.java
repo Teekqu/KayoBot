@@ -243,7 +243,6 @@ public class KGuild {
                 map.put("roleId", r.getId());
                 map.put("addUser", rs.getString(3));
                 map.put("addBot", rs.getString(4));
-                map.put("afterVerify", rs.getString(5));
                 if(!roles.contains(map)) roles.add(map);
             }
             try { stm.close(); } catch (Exception ignored) { }
