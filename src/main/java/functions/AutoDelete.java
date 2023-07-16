@@ -486,37 +486,38 @@ public class AutoDelete extends ListenerAdapter {
 
     private String convertSecondsInFormat(Long seconds) {
 
-        int minutes = 0;
-        int hours = 0;
-        int days = 0;
-        while(true) {
-            if(seconds >= 60) {
-                minutes = minutes+1;
-                seconds = seconds-60;
-            } else {
-                if(minutes >= 60) {
-                    hours = hours+1;
-                    minutes = minutes-60;
-                } else {
-                    if(hours >= 24) {
-                        days = days+1;
-                        hours = hours-24;
-                    } else {
-                        break;
-                    }
-                }
-            }
+        long days = seconds / (60 * 60 * 24);
+        long remainder = seconds % (60 * 60 * 24);
 
+        long hours = remainder / (60 * 60);
+        remainder = remainder % (60 * 60);
+
+        long mins = remainder / (60);
+        remainder = remainder % (60);
+
+        long secs = remainder;
+
+        String strDaysHrsMinsSecs = "";
+
+        if (days > 0) {
+            strDaysHrsMinsSecs += days + "d ";
         }
 
-        StringBuilder format = new StringBuilder();
+        if (hours > 0) {
+            strDaysHrsMinsSecs += hours + "h ";
+        } else {
+            strDaysHrsMinsSecs += "0h ";
+        }
 
-        if(days != 0) format.append(days+"d ");
-        if(hours != 0) format.append(hours+"h ");
-        if(minutes != 0) format.append(minutes+"m ");
-        if(seconds != 0) format.append(seconds+"s ");
+        if (mins > 0) {
+            strDaysHrsMinsSecs += mins + "m ";
+        } else {
+            strDaysHrsMinsSecs += "0m ";
+        }
 
-        return format.toString().substring(0, (format.toString().length()-1));
+        strDaysHrsMinsSecs += secs + "s";
+
+        return strDaysHrsMinsSecs;
 
     }
 
