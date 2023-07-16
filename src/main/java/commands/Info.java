@@ -29,7 +29,7 @@ public class Info extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(Emojis.kayo() + " │ "+bot.getName()+" - Informationen")
-                .setDescription("In diesem Menü findet ihr aktuelle Informationen über "+bot.getName()+"!")
+                .setDescription("In diesem Menü findest du aktuelle Informationen über "+bot.getName()+"!")
                 .setColor(Get.embedColor())
                 .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                 .setThumbnail(bot.getEffectiveAvatarUrl())
