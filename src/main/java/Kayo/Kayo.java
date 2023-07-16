@@ -19,7 +19,7 @@ public class Kayo {
         jda = JDABuilder.createLight(token)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-                .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.STICKER)
+                .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.FORUM_TAGS)
                 .setActivity(Activity.playing("booting up"))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .build();
@@ -32,6 +32,7 @@ public class Kayo {
         jda.addEventListener(new commands.Info());
         jda.addEventListener(new commands.addEmoji());
         jda.addEventListener(new commands.Serverinfo());
+        jda.addEventListener(new commands.Userinfo());
 
         // Functions
         jda.addEventListener(new functions.AutoDelete());
