@@ -32,7 +32,7 @@ public class Serverinfo extends ListenerAdapter {
         if(g.getBoostTier().getKey()==3) requiredBoosts = 14;
 
         EmbedBuilder embed = new EmbedBuilder()
-                .setTitle(Emojis.settings()+" | **Server - Informationen**")
+                .setTitle(Emojis.settings()+" │ **Server - Informationen**")
                 .setDescription("In diesem Menü findest du aktuelle Informationen über den Server!")
                 .setColor(Get.embedColor())
                 .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
