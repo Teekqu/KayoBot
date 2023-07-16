@@ -6,6 +6,7 @@ public class Emojis {
     public static String left() { return "<:k_left:1125860607091019897>"; }
     public static String right() { return "<:k_right:1125860608542253157>"; }
     public static String activities() { return "<:k_activities:1125021039412400168>"; }
+    public static String automod() { return "<:k_automod:1130260853304852502>"; }
     public static String awardcup() { return "<:k_awardcup:1125021035394244689>"; }
     public static String archive() { return "<:k_archive:1125021042398740541>"; }
     public static String bot() { return "<:k_bot:1130139150054604821>"; }
@@ -37,7 +38,6 @@ public class Emojis {
     public static String pin() { return "<:k_pin:1125865303205761185>"; }
     public static String pen() { return "<:k_pen:1125021011025334332>"; }
     public static String user() { return "<:k_user:1125021020668043295>"; }
-    public static String reply() { return "<:k_reply:1125021026548469880>"; }
     public static String role() { return "<:k_role:1130139337351237652>"; }
     public static String search() { return "<:k_search:1125021027999678475>"; }
     public static String settings() { return "<:k_settings:1125021024900100166>"; }
