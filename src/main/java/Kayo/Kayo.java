@@ -27,7 +27,6 @@ public class Kayo {
 
         // Events
         jda.addEventListener(new events.Ready());
-        jda.addEventListener(new commands.setupStuff());
 
         // Commands
         jda.addEventListener(new commands.Info());
