@@ -78,6 +78,15 @@ public class Ready extends ListenerAdapter {
         g.upsertCommand("autoreact", "Verwalte das AutoReact System")
                 .addSubcommands(createautoreactcmd, showautoreactcmd)
                 .setGuildOnly(true).queue();
+
+        OptionData createjoinroledata = new OptionData(OptionType.ROLE, "role", "Wähle eine Rolle", true);
+        SubcommandData createjoinrolecmd = new SubcommandData("add", "Füge eine JoinRole hinzu").addOptions(createjoinroledata);
+
+        g.upsertCommand("joinrole", "Verwalte das JoinRole System")
+                .addSubcommands(createjoinrolecmd)
+                .setGuildOnly(true).queue();
+        g.upsertCommand("joinroles", "Siehe alle JoinRoles und bearbeite diese")
+                .setGuildOnly(true).queue();
     }
 
     private Runnable statusTask(JDA jda) {
