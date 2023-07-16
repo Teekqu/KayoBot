@@ -42,13 +42,20 @@ public class Ready extends ListenerAdapter {
 
         JDA jda = Kayo.Kayo.getJda();
         Guild g = jda.getGuildById("820343748244144169");
+        if(g == null) return;
 
+        /* COMMANDS */
         g.upsertCommand("info", "Siehe Informationen über den Bot an").setGuildOnly(true).queue();
         g.upsertCommand("add-emoji", "Füge ein Emoji zum Server hinzu")
                 .addOption(OptionType.STRING, "emoji", "Gebe ein Emoji an", true)
                 .addOption(OptionType.STRING, "name", "Gebe einen Namen für das Emoji an", false)
                 .setGuildOnly(true).queue();
+        g.upsertCommand("serverinfo", "Siehe Informationen über den Server an").setGuildOnly(true).queue();
+        g.upsertCommand("userinfo", "Siehe Informationen über einen User an")
+                .addOption(OptionType.USER, "user", "Wähle einen User", false)
+                .setGuildOnly(true).queue();
 
+        /* FUNCTIONS */
         OptionData createautodeletedata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Kanal", true)
                 .setChannelTypes(ChannelType.TEXT);
         OptionData createautodeletedata2 = new OptionData(OptionType.INTEGER, "time", "Gebe eine Zeit an", true);
@@ -59,29 +66,23 @@ public class Ready extends ListenerAdapter {
                 .addChoice("Tag/e", "d");
         SubcommandData createautodeletecmd = new SubcommandData("add", "Füge einen AutoDelete Kanal hinzu")
                 .addOptions(createautodeletedata1, createautodeletedata2, createautodeletedata3);
-
         SubcommandData showautodeletecmd = new SubcommandData("show", "Siehe alle AutoDelete Channel und bearbeiten diese");
-
         g.upsertCommand("autodelete", "Verwalte das AutoDelete System")
                 .addSubcommands(createautodeletecmd, showautodeletecmd)
                 .setGuildOnly(true).queue();
-
 
         OptionData createautoreactdata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Kanal", true)
                 .setChannelTypes(ChannelType.TEXT);
         OptionData createautoreactdata2 = new OptionData(OptionType.STRING, "emoji", "Gebe ein Emoji an", true);
         SubcommandData createautoreactcmd = new SubcommandData("add", "Füge AutoReact zu einem Kanal hinzu")
                 .addOptions(createautoreactdata1, createautoreactdata2);
-
         SubcommandData showautoreactcmd = new SubcommandData("show", "Siehe alle AutoReact Channel und bearbeite diese");
-
         g.upsertCommand("autoreact", "Verwalte das AutoReact System")
                 .addSubcommands(createautoreactcmd, showautoreactcmd)
                 .setGuildOnly(true).queue();
 
         OptionData createjoinroledata = new OptionData(OptionType.ROLE, "role", "Wähle eine Rolle", true);
         SubcommandData createjoinrolecmd = new SubcommandData("add", "Füge eine JoinRole hinzu").addOptions(createjoinroledata);
-
         g.upsertCommand("joinrole", "Verwalte das JoinRole System")
                 .addSubcommands(createjoinrolecmd)
                 .setGuildOnly(true).queue();
