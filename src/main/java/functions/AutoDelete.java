@@ -66,11 +66,9 @@ public class AutoDelete extends ListenerAdapter {
             int time = e.getOption("time").getAsInt();
             String unit = e.getOption("unit").getAsString();
 
-            switch (unit) {
-                case "m": time=time*60;
-                case "h": time=(time*60)*60;
-                case "d": time=((time*60)*60)*24;
-            }
+            if(unit.equals("m")) time = (time*60);
+            if(unit.equals("h")) time = ((time*60)*60);
+            if(unit.equals("d")) time = (((time*60)*60)*24);
 
             g.addAutoDelete(ch, Long.parseLong(String.valueOf(time)), false, true, true);
 
