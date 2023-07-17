@@ -1,5 +1,6 @@
 package Kayo;
 
+import com.sun.net.httpserver.HttpServer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -7,6 +8,10 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
+
+import java.net.InetSocketAddress;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class Kayo {
 
@@ -23,6 +28,21 @@ public class Kayo {
                 .setActivity(Activity.playing("booting up"))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .build();
+
+        /* Web Server */
+        try {
+            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
+            HttpServer httpServer = HttpServer.create(new InetSocketAddress("37.114.32.239", 1005), 0);
+
+            httpServer.createContext("/kayo/topgg/vote/", new webserver.Topgg());
+
+            httpServer.setExecutor(threadPoolExecutor);
+            httpServer.start();
+            System.out.println("[HTTP] Server started at " + httpServer.getAddress().getAddress() + ":" + httpServer.getAddress().getPort());
+
+        } catch (Exception err) {
+            err.printStackTrace();
+        }
 
 
         // Events
