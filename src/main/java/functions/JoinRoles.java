@@ -17,6 +17,7 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.TimeFormat;
+import net.dv8tion.jda.internal.utils.PermissionUtil;
 import utils.*;
 
 import java.util.*;
@@ -48,7 +49,7 @@ public class JoinRoles extends ListenerAdapter {
                 ih.editOriginalEmbeds(Embeds.error(g, u, "Die Rolle ist bereits eine JoinRole")).queue();
                 return;
             }
-            if(r.getPosition() >= e.getJDA().getRoles().get(0).getPosition()) {
+            if(!PermissionUtil.canInteract(e.getGuild().getMemberById(e.getJDA().getSelfUser().getId()), r)) {
                 ih.editOriginalEmbeds(Embeds.error(g, u, "Die Rolle muss unter Kayo sein")).queue();
                 return;
             }
