@@ -45,6 +45,7 @@ public class Topgg implements HttpHandler {
             Guild g = Kayo.Kayo.getJda().getGuildById("1124803921978871850");
             TextChannel ch = g.getTextChannelById("1130518001859440811");
 
+            System.out.println(jo);
             User user = Kayo.Kayo.getJda().getUserById(jo.getString("user"));
             if(user == null) {
                 String description = "Der User " + UserSnowflake.fromId(jo.getString("user")) + " hat für mich gevotet!\nEr votet zum `1.` mal.";
