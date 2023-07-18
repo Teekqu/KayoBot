@@ -200,7 +200,10 @@ public class AutoDelete extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
         KGuild g = new KGuild(e.getGuild());
 
-        if(this.activeUsers.contains(u.getIdLong())) e.deferEdit().queue();
+        if(this.activeUsers.contains(u.getIdLong())) {
+            e.deferEdit().queue();
+            return;
+        }
 
         this.activeUsers.add(u.getIdLong());
 
@@ -223,7 +226,7 @@ public class AutoDelete extends ListenerAdapter {
 
         if(id.equals("delete")) {
 
-            if(g.getAutoDelete((GuildMessageChannel) ch)==null) {
+            if(map==null) {
                 e.replyEmbeds(Embeds.error(g, u, "Der Channel besitzt kein AutoDelete")).setEphemeral(true).queue();
                 this.activeUsers.remove(u.getIdLong());
                 return;
