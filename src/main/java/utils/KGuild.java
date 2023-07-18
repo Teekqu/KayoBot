@@ -349,4 +349,94 @@ public class KGuild {
 
     }
 
+    public Collection<HashMap<String, String>> getWelcomeMessages() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<HashMap<String, String>> maps = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM WelcomeMessages WHERE guildId="+this.getId());
+            while(rs.next()) {
+                HashMap<String, String> map = new HashMap<>();
+                if(this.g.getGuildChannelById(rs.getString(2)) == null) continue;
+                map.put("guildId", this.getId());
+                map.put("channelId", rs.getString(2));
+                map.put("message", rs.getString(3));
+                map.put("sendUser", rs.getString(4));
+                map.put("sendBot", rs.getString(5));
+                maps.add(map);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return maps;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getWelcomeMessage(GuildMessageChannel ch) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM WelcomeMessages WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            if(this.g.getGuildChannelById(rs.getString(2)) == null) {
+                try { stm.close(); } catch (Exception ignored) { }
+                this.removeWelcomeMessage(ch);
+                return null;
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("guildId", this.getId());
+            map.put("channelId", rs.getString(2));
+            map.put("message", rs.getString(3));
+            map.put("sendUser", rs.getString(4));
+            map.put("sendBot", rs.getString(5));
+            try { stm.close(); } catch (Exception ignored) { }
+            return map;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public boolean addWelcomeMessage(GuildMessageChannel ch, String message, boolean sendUser, boolean sendBot) {
+        if(this.getWelcomeMessage(ch)!=null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("INSERT INTO WelcomeMessages(guildId, channelId, message, sendUser, sendBot) VALUES("+this.getId()+","+ch.getId()+",'"+message+"','"+sendUser+"','"+sendBot+"')");
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean editWelcomeMessage(GuildMessageChannel ch, String message, boolean sendUser, boolean sendBot) {
+        if(this.getWelcomeMessage(ch)==null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("UPDATE WelcomeMessages SET message='"+message+"', sendUser='"+sendUser+"', sendBot='"+sendBot+"' WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean removeWelcomeMessage(GuildMessageChannel ch) {
+        if(this.getWelcomeMessage(ch)==null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM WelcomeMessages WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+
 }
