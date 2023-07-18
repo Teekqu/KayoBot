@@ -1,6 +1,16 @@
 package utils;
 
+import org.json.JSONObject;
+
 import java.awt.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.Authenticator;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.http.HttpClient;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -49,7 +59,32 @@ public class Get {
         return "https://top.gg/bot/"+Kayo.Kayo.getJda().getSelfUser().getId()+"/vote";
     }
     public static long topggVotes() {
-        return 0;
+
+        try {
+            HttpURLConnection conn = (HttpURLConnection) new URL("https://top.gg/api/bots/1124785133002686524").openConnection();
+
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept", "application/json");
+            conn.setRequestProperty("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMjQ3ODUxMzMwMDI2ODY1MjQiLCJib3QiOnRydWUsImlhdCI6MTY4OTY5MDM5OH0.HMasoFC67I2eTYtrQJ5CJtQdB025SzjM5SrLlNFl6nw");
+            conn.setDoOutput(true);
+
+            int responseCode = conn.getResponseCode();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+            String line;
+            StringBuilder response = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            JSONObject jo = new JSONObject(response.toString());
+
+            return Long.parseLong(""+jo.get("monthlyPoints"));
+        } catch (Exception err) {
+            err.printStackTrace();
+            return 0;
+        }
     }
 
     public static int limit(String id, boolean hasPremium) {
