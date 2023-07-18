@@ -56,7 +56,7 @@ public class Userinfo extends ListenerAdapter {
                 .addField(Emojis.pen()+" - Nickname", nick, true)
                 .addBlankField(false)
                 .addField(Emojis.clock()+" - Erstellt", "<t:"+mU.getTimeCreated().toInstant().getEpochSecond()+"> (<t:"+mU.getTimeCreated().toInstant().getEpochSecond()+":R>)", true)
-                .addField(Emojis.join()+" - Beigetreten", "<t:"+m.getTimeCreated().toInstant().getEpochSecond()+"> (<t:"+m.getTimeJoined().toInstant().getEpochSecond()+":R>)", true)
+                .addField(Emojis.join()+" - Beigetreten", "<t:"+m.getTimeJoined().toInstant().getEpochSecond()+"> (<t:"+m.getTimeJoined().toInstant().getEpochSecond()+":R>)", true)
                 .addBlankField(false)
                 .addField(Emojis.awardcup()+" - Badges", badges, true)
                 .addField(Emojis.boost()+" - Booster", booster, true);
