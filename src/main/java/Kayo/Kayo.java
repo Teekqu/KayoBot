@@ -41,6 +41,7 @@ public class Kayo {
             System.out.println("[HTTP] Server started at " + httpServer.getAddress().getAddress() + ":" + httpServer.getAddress().getPort());
 
         } catch (Exception err) {
+            System.out.println("[HTTP] Failed to start the webserver");
             err.printStackTrace();
         }
 
@@ -61,6 +62,7 @@ public class Kayo {
         jda.addEventListener(new functions.AutoReact());
         jda.addEventListener(new functions.JoinRoles());
         jda.addEventListener(new functions.AutoMod());
+        jda.addEventListener(new functions.WelcomeMessages());
 
     }
 
