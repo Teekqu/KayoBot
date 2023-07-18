@@ -92,6 +92,14 @@ public class Ready extends ListenerAdapter {
 
         SubcommandData automodrulescmd = new SubcommandData("rules", "Verwalte die AutoMod Regeln");
         jda.upsertCommand("automod", "Verwalte das AutoMod System von Discord").addSubcommands(automodrulescmd).setGuildOnly(true).queue();
+
+        OptionData welcomeadddata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Channel", true).setChannelTypes(ChannelType.TEXT);
+        SubcommandData welcomeaddcmd = new SubcommandData("add", "Füge eine neue WelcomeMessage hinzu").addOptions(welcomeadddata1);
+        SubcommandData welcomeshowcmd = new SubcommandData("show", "Siehe alle WelcomeMessages an und bearbeite diese");
+        SubcommandData welcomevariablescmd = new SubcommandData("variables", "Siehe alle Verfügbaren Variablen an");
+        jda.upsertCommand("welcome", "Verwalte das Welcome System")
+                .addSubcommands(welcomeaddcmd, welcomeshowcmd, welcomevariablescmd)
+                .setGuildOnly(true).queue();
     }
 
     private Runnable statusTask(JDA jda) {
