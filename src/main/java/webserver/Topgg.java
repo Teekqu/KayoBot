@@ -47,7 +47,7 @@ public class Topgg implements HttpHandler {
 
             User user = Kayo.Kayo.getJda().getUserById(jo.getString("user"));
             if(user == null) {
-                String description = "Der User " + UserSnowflake.fromId(jo.getString("user")) + " hat für mich gevotet!\nEr votet zum `1.` mal.";
+                String description = "Der User " + UserSnowflake.fromId(jo.getString("user")).getAsMention() + " hat für mich gevotet!\nEr votet zum `1.` mal.";
                 if(jo.getString("type").equals("upvote")) {
                     if(jo.getBoolean("isWeekend")) {
                         description += "\n\r:star: **Wochenende** :star:\n*Es ist Wochenende, der Vote zählt doppelt!*";
