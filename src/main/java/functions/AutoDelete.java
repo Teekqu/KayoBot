@@ -539,7 +539,12 @@ public class AutoDelete extends ListenerAdapter {
             public void run() {
                 if(e.getMessage().getAuthor().isSystem()) return;
                 try { Thread.sleep(seconds*1000); } catch (Exception ignored) { }
-                Message msg = Kayo.Kayo.getJda().getGuildById(g.getId()).getTextChannelById(e.getChannel().getId()).retrieveMessageById(e.getMessageId()).complete();
+                Message msg;
+                 try {
+                     msg = Kayo.Kayo.getJda().getGuildById(g.getId()).getTextChannelById(e.getChannel().getId()).retrieveMessageById(e.getMessageId()).complete();
+                 } catch (Exception err) {
+                     return;
+                 }
                 if(msg == null) return;
                 if(msg.getAuthor().isBot()) {
                     if(delBots && !msg.isPinned()) try { msg.delete().queue(); } catch (Exception ignored) { }
