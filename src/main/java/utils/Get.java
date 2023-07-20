@@ -1,5 +1,7 @@
 package utils;
 
+import net.dv8tion.jda.api.entities.User;
+import net.dv8tion.jda.api.utils.TimeFormat;
 import org.json.JSONObject;
 
 import java.awt.*;
@@ -13,6 +15,8 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class Get {
 
@@ -84,6 +88,28 @@ public class Get {
         } catch (Exception err) {
             err.printStackTrace();
             return 0;
+        }
+    }
+    public static Collection<KUser> voteReminders(boolean onlyToRemind) {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<KUser> users = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM VoteReminder");
+            while(rs.next()) {
+
+                User user = Kayo.Kayo.getJda().getUserById(rs.getString(1));
+                if(user==null) continue;
+                KUser u = new KUser(user);
+                if(onlyToRemind && u.getLastVote()<= TimeFormat.RELATIVE.now().toInstant().getEpochSecond()) users.add(u);
+                if(!onlyToRemind) users.add(u);
+
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return users;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
         }
     }
 
