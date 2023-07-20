@@ -90,18 +90,18 @@ public class Get {
             return 0;
         }
     }
-    public static Collection<KUser> voteReminders(boolean onlyToRemind) {
+    public static Collection<User> voteReminders(boolean onlyToRemind) {
         Statement stm = MySQL.connect();
         try {
-            Collection<KUser> users = new ArrayList<>();
+            Collection<User> users = new ArrayList<>();
             ResultSet rs = stm.executeQuery("SELECT * FROM VoteReminder");
             while(rs.next()) {
 
                 User user = Kayo.Kayo.getJda().getUserById(rs.getString(1));
                 if(user==null) continue;
                 KUser u = new KUser(user);
-                if(onlyToRemind && u.getLastVote()<= TimeFormat.RELATIVE.now().toInstant().getEpochSecond()) users.add(u);
-                if(!onlyToRemind) users.add(u);
+                if(onlyToRemind && (u.getLastVote()+43200) <= TimeFormat.RELATIVE.now().toInstant().getEpochSecond()) users.add(user);
+                if(!onlyToRemind) users.add(user);
 
             }
             try { stm.close(); } catch (Exception ignored) { }
