@@ -4,12 +4,14 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.OnlineStatus;
 import net.dv8tion.jda.api.entities.Activity;
+import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.utils.TimeFormat;
+import org.checkerframework.checker.units.qual.K;
 import utils.Embeds;
 import utils.Emojis;
 import utils.Get;
@@ -27,7 +29,7 @@ public class VoteReminder extends ListenerAdapter {
 
         KUser u = new KUser(e.getUser());
 
-        if(Get.voteReminders(false).contains(u)) {
+        if(Get.voteReminders(false).contains(e.getUser())) {
             e.replyEmbeds(Embeds.error(u, "Du hast den VoteReminder bereits aktiviert")).setEphemeral(true).queue();
             return;
         }
@@ -42,7 +44,8 @@ public class VoteReminder extends ListenerAdapter {
                 .setThumbnail(u.getEffectiveAvatarUrl())
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
         Button btn1 = Button.success("topgg.vote.reminder", "Erinnerung").withEmoji(Emoji.fromFormatted(Emojis.clock())).withDisabled(true);
-        e.replyEmbeds(embed.build()).setActionRow(btn1).setEphemeral(true).queue();
+        e.editMessageEmbeds(e.getMessage().getEmbeds()).setActionRow(btn1).queue();
+        e.getChannel().sendMessageEmbeds(embed.build()).queue();
 
     }
 
@@ -58,9 +61,10 @@ public class VoteReminder extends ListenerAdapter {
     private Runnable voteReminder() {
         return () -> {
 
-            Collection<KUser> users = Get.voteReminders(true);
-            for(KUser u : users) {
+            Collection<User> users = Get.voteReminders(true);
+            for(User user : users) {
 
+                KUser u = new KUser(user);
                 EmbedBuilder embed = new EmbedBuilder()
                         .setTitle(Emojis.vote()+" | **Vote Reminder**")
                         .setDescription("Du kannst erneut für mich voten!")
@@ -72,7 +76,10 @@ public class VoteReminder extends ListenerAdapter {
                 try {
                     u.getUser().openPrivateChannel().complete().sendMessageEmbeds(embed.build()).setActionRow(btn).queue();
                 } catch (Exception ignored) { }
-                u.disableVoteReminder();
+                boolean success = u.disableVoteReminder();
+                if(!success) {
+                    System.out.println("Fehler beim deaktivieren des Vote Reminders ("+u.getUsername()+" | "+u.getId()+")");
+                }
 
             }
 
