@@ -16,6 +16,9 @@ public class KUser {
         this.u = u;
     }
 
+    public User getUser() {
+        return this.u;
+    }
     public String getName() {
         return this.u.getName();
     }
@@ -96,7 +99,33 @@ public class KUser {
         Statement stm = MySQL.connect();
         try {
             long oldCount = this.getVoteCount();
-            stm.execute("UPDATE TopggVotes SET count="+newCount+" AND lastVote="+lastVote+" WHERE userId="+this.getId());
+            stm.execute("UPDATE TopggVotes SET count="+newCount+", lastVote="+lastVote+" WHERE userId="+this.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean enableVoteReminder(long timestamp) {
+        if(Get.voteReminders(false).contains(this)) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("INSERT INTO VoteReminder(userId, time) VALUES("+this.getId()+","+timestamp+");");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean disableVoteReminder() {
+        if(!Get.voteReminders(false).contains(this)) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM VoteReminder WHERE userId="+this.getId());
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
