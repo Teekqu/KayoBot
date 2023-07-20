@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.utils.TimeFormat;
 import okhttp3.internal.http.HttpHeaders;
 import org.json.JSONObject;
 import utils.Emojis;
+import utils.Get;
 import utils.KUser;
 
 import java.io.BufferedReader;
@@ -95,6 +96,16 @@ public class Topgg implements HttpHandler {
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                     .setThumbnail(user.getEffectiveAvatarUrl())
                     .setFooter("Danke für die Unterstützung!", Kayo.Kayo.getJda().getSelfUser().getEffectiveAvatarUrl());
+
+            EmbedBuilder embed1 = new EmbedBuilder()
+                    .setTitle(Emojis.vote()+" | **Top.gg Vote**")
+                    .setDescription("Vielen Dank für deinen `"+(voteCount+1)+".` Vote für Kayo!\nDu kannst in "+(TimeFormat.RELATIVE.now().toInstant().getEpochSecond()+43200)+" erneut voten!")
+                    .setColor(Get.embedColor())
+                    .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
+                    .setThumbnail(u.getEffectiveAvatarUrl())
+                    .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
+            Button btn1 = Button.success("topgg.vote.reminder", "Erinnerung").withEmoji(Emoji.fromFormatted(Emojis.clock()));
+            try { user.openPrivateChannel().complete().sendMessageEmbeds(embed1.build()).setActionRow(btn1).queue(); } catch (Exception ignored) { }
 
             Button btn = Button.link("https://top.gg/bot/"+Kayo.Kayo.getJda().getSelfUser().getId()+"/vote", "Voten").withEmoji(Emoji.fromFormatted(Emojis.vote())).withDisabled(false);
 
