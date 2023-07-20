@@ -99,7 +99,7 @@ public class Topgg implements HttpHandler {
 
             EmbedBuilder embed1 = new EmbedBuilder()
                     .setTitle(Emojis.vote()+" | **Top.gg Vote**")
-                    .setDescription("Vielen Dank für deinen `"+(voteCount+1)+".` Vote für Kayo!\nDu kannst in "+(TimeFormat.RELATIVE.now().toInstant().getEpochSecond()+43200)+" erneut voten!")
+                    .setDescription("Vielen Dank für deinen `"+(voteCount+1)+".` Vote für Kayo!\nDu kannst <t:"+(TimeFormat.RELATIVE.now().toInstant().getEpochSecond()+43200)+":R> erneut voten!")
                     .setColor(Get.embedColor())
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                     .setThumbnail(u.getEffectiveAvatarUrl())
