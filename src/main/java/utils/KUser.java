@@ -109,7 +109,7 @@ public class KUser {
         }
     }
     public boolean enableVoteReminder(long timestamp) {
-        if(Get.voteReminders(false).contains(this)) return false;
+        if(Get.voteReminders(false).contains(this.getUser())) return false;
         Statement stm = MySQL.connect();
         try {
             stm.execute("INSERT INTO VoteReminder(userId, time) VALUES("+this.getId()+","+timestamp+");");
@@ -122,7 +122,7 @@ public class KUser {
         }
     }
     public boolean disableVoteReminder() {
-        if(!Get.voteReminders(false).contains(this)) return false;
+        if(!Get.voteReminders(false).contains(this.getUser())) return false;
         Statement stm = MySQL.connect();
         try {
             stm.execute("DELETE FROM VoteReminder WHERE userId="+this.getId());
