@@ -524,6 +524,7 @@ public class AutoDelete extends ListenerAdapter {
 
     public void onMessageReceived(MessageReceivedEvent e) {
 
+        if(!e.isFromGuild()) return;
         KGuild g = new KGuild(e.getGuild());
         KUser u = new KUser(e.getAuthor());
 
