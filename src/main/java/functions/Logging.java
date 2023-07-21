@@ -2,11 +2,35 @@ package functions;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
+import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
+import net.dv8tion.jda.api.events.channel.update.*;
+import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
+import net.dv8tion.jda.api.events.guild.GuildBanEvent;
+import net.dv8tion.jda.api.events.guild.GuildTimeoutEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
+import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleRemoveEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateAvatarEvent;
+import net.dv8tion.jda.api.events.guild.member.update.GuildMemberUpdateNicknameEvent;
+import net.dv8tion.jda.api.events.guild.update.*;
+import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
+import net.dv8tion.jda.api.events.message.MessageUpdateEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
+import net.dv8tion.jda.api.events.role.update.*;
+import net.dv8tion.jda.api.events.user.update.UserUpdateAvatarEvent;
+import net.dv8tion.jda.api.events.user.update.UserUpdateGlobalNameEvent;
+import net.dv8tion.jda.api.events.user.update.UserUpdateNameEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
 import net.dv8tion.jda.api.interactions.components.ActionRow;
@@ -452,6 +476,253 @@ public class Logging extends ListenerAdapter {
                     .build();
             ih.editOriginalEmbeds(embed.build()).setComponents(ActionRow.of(btn), ActionRow.of(sm)).queue();
         }
+
+    }
+
+
+    /* Logging Events */
+    public void onGuildMemberUpdateNickname(GuildMemberUpdateNicknameEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
+
+    }
+    public void onGuildMemberUpdateAvatar(GuildMemberUpdateAvatarEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
+
+    }
+    public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
+
+    }
+    public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
+
+    }
+
+    public void onUserUpdateName(UserUpdateNameEvent e) {
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+
+    }
+    public void onUserUpdateGlobalName(UserUpdateGlobalNameEvent e) {
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+
+    }
+    public void onUserUpdateAvatar(UserUpdateAvatarEvent e) {
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+
+    }
+
+    public void onGuildUpdateAfkChannel(GuildUpdateAfkChannelEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateAfkTimeout(GuildUpdateAfkTimeoutEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateBanner(GuildUpdateBannerEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateDescription(GuildUpdateDescriptionEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateIcon(GuildUpdateIconEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateName(GuildUpdateNameEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateOwner(GuildUpdateOwnerEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateRulesChannel(GuildUpdateRulesChannelEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateSystemChannel(GuildUpdateSystemChannelEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+    public void onGuildUpdateVanityCode(GuildUpdateVanityCodeEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+    }
+
+    public void onChannelCreate(ChannelCreateEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelDelete(ChannelDeleteEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateName(ChannelUpdateNameEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateNSFW(ChannelUpdateNSFWEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateParent(ChannelUpdateParentEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateSlowmode(ChannelUpdateSlowmodeEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateTopic(ChannelUpdateTopicEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateType(ChannelUpdateTypeEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+    public void onChannelUpdateUserLimit(ChannelUpdateUserLimitEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+    }
+
+    public void onRoleCreate(RoleCreateEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleDelete(RoleDeleteEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleUpdateColor(RoleUpdateColorEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleUpdateHoisted(RoleUpdateHoistedEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleUpdateIcon(RoleUpdateIconEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleUpdateName(RoleUpdateNameEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+    public void onRoleUpdatePermissions(RoleUpdatePermissionsEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+    }
+
+    public void onMessageUpdate(MessageUpdateEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "message");
+
+    }
+    public void onMessageDelete(MessageDeleteEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "message");
+
+    }
+
+    public void onGuildBan(GuildBanEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "moderation");
+
+    }
+    public void onGuildAuditLogEntryCreate(GuildAuditLogEntryCreateEvent e) {
+        AuditLogEntry entry = e.getEntry();
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "moderation");
+
+    }
+
+    public void onGuildMemberJoin(GuildMemberJoinEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "serverJoinLeave");
+
+    }
+    public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "serverJoinLeave");
+
+    }
+
+    public void onGuildVoiceUpdate(GuildVoiceUpdateEvent e) {
+        KGuild g = new KGuild(e.getGuild());
+        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "voiceJoinLeave");
+
+    }
+
+    private Collection<GuildMessageChannel> getLoggingChannel(String name) {
+
+        Collection<GuildMessageChannel> channels = new ArrayList<>();
+        Kayo.Kayo.getJda().getGuilds().forEach(guild -> {
+            KGuild g = new KGuild(guild);
+            g.getLogging().forEach(map -> {
+                if(Boolean.parseBoolean(map.get(name))) {
+                    GuildMessageChannel ch = (GuildMessageChannel) g.getGuild().getGuildChannelById(map.get("channelId"));
+                    if(ch != null) channels.add(ch);
+                }
+            });
+        });
+        return channels;
+
+    }
+    private Collection<GuildMessageChannel> getLoggingChannel(KGuild g, String name) {
+
+        Collection<GuildMessageChannel> channels = new ArrayList<>();
+        g.getLogging().forEach(map -> {
+            if(Boolean.parseBoolean(map.get(name))) {
+                GuildMessageChannel ch = (GuildMessageChannel) g.getGuild().getGuildChannelById(map.get("channelId"));
+                if(ch != null) channels.add(ch);
+            }
+        });
+        return channels;
 
     }
 
