@@ -439,4 +439,107 @@ public class KGuild {
         }
     }
 
+    public Collection<HashMap<String, String>> getLogging() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<HashMap<String, String>> maps = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM Logging WHERE guildId="+this.getId());
+            while(rs.next()) {
+                HashMap<String, String> map = new HashMap<>();
+                if(this.g.getGuildChannelById(rs.getString(2)) == null) continue;
+                map.put("guildId", this.getId());
+                map.put("channelId", rs.getString(2));
+                map.put("member", rs.getString(3));
+                map.put("user", rs.getString(4));
+                map.put("server", rs.getString(5));
+                map.put("channel", rs.getString(6));
+                map.put("role", rs.getString(7));
+                map.put("message", rs.getString(8));
+                map.put("moderation", rs.getString(9));
+                map.put("serverJoinLeave", rs.getString(10));
+                map.put("voiceJoinLeave", rs.getString(11));
+                maps.add(map);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return maps;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getLogging(GuildMessageChannel ch) {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<HashMap<String, String>> maps = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM Logging WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            if(this.g.getGuildChannelById(rs.getString(2)) == null) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("guildId", this.getId());
+            map.put("channelId", rs.getString(2));
+            map.put("member", rs.getString(3));
+            map.put("user", rs.getString(4));
+            map.put("server", rs.getString(5));
+            map.put("channel", rs.getString(6));
+            map.put("role", rs.getString(7));
+            map.put("message", rs.getString(8));
+            map.put("moderation", rs.getString(9));
+            map.put("serverJoinLeave", rs.getString(10));
+            map.put("voiceJoinLeave", rs.getString(11));
+            maps.add(map);
+            try { stm.close(); } catch (Exception ignored) { }
+            return map;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public boolean addLogging(GuildMessageChannel ch, boolean member, boolean user, boolean server, boolean channel, boolean role, boolean message, boolean moderation, boolean serverJoinLeave, boolean voiceJoinLeave) {
+        if(this.getLogging(ch)!=null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("INSERT INTO Logging(guildId,channelId,member,user,server,channel,role,message,moderation,serverJoinLeave,voiceJoinLeave) VALUES("+this.getId()+","+ch.getId()+",'"+member+"','"+user+"','"+server+"','"+channel+"','"+role+"','"+message+"','"+moderation+"','"+serverJoinLeave+"','"+voiceJoinLeave+"')");
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean editLogging(GuildMessageChannel ch, boolean member, boolean user, boolean server, boolean channel, boolean role, boolean message, boolean moderation, boolean serverJoinLeave, boolean voiceJoinLeave) {
+        if(this.getLogging(ch)==null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("UPDATE Logging SET member='"+member+"',user='"+user+"',server='"+server+"',channel='"+channel+"',role='"+role+"',message='"+message+"',moderation='"+moderation+"',serverJoinLeave='"+serverJoinLeave+"',voiceJoinLeave='"+voiceJoinLeave+"' WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean deleteLogging(GuildMessageChannel ch) {
+        if(this.getLogging(ch)==null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM Logging WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch(Exception ignored) { }
+            return true;
+        } catch(Exception err) {
+            try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+
 }
