@@ -89,7 +89,7 @@ public class Logging extends ListenerAdapter {
             if(sb.toString().equals("")) sb.append(Emojis.warning()+" *Es wurden keine Einträge gefunden!*");
 
             EmbedBuilder embed = new EmbedBuilder()
-                    .setTitle(Emojis.delete() + " | **Logging**")
+                    .setTitle(Emojis.archive() + " | **Logging**")
                     .setDescription(sb.toString())
                     .setColor(Get.embedColor())
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
@@ -119,7 +119,7 @@ public class Logging extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
         KUser u = new KUser(e.getUser());
 
-        if(e.getId().equals("logging.select.show")) {
+        if(e.getInteraction().getComponentId().equals("logging.select.show")) {
 
             if(!e.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
                 e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
@@ -243,7 +243,7 @@ public class Logging extends ListenerAdapter {
 
             ih.editOriginalEmbeds(embed.build()).setActionRow(btn).setActionRow(sm).queue();
 
-        } else if(e.getId().startsWith("logging.select.show.")) {
+        } else if(e.getInteraction().getComponentId().startsWith("logging.select.show.")) {
 
             if(!e.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
                 e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
@@ -306,39 +306,52 @@ public class Logging extends ListenerAdapter {
             boolean serverJoinLeave2 = false;
             boolean voiceJoinLeave2 = false;
 
-            if(e.getInteraction().getSelectedOptions().contains(member1)) {
+            Collection<String> values = new ArrayList<>();
+            e.getInteraction().getSelectedOptions().forEach(option -> {
+                values.add(option.getValue().split("\\.")[4]);
+            });
+
+            if(values.contains("member")) {
                 defaultOptions.add(member1);
                 member = Emojis.yes();
                 member2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(user1)) {
+            }
+            if(values.contains("user")) {
                 defaultOptions.add(user1);
                 user = Emojis.yes();
                 user2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(server1)) {
+            }
+            if(values.contains("server")) {
                 defaultOptions.add(server1);
                 server = Emojis.yes();
                 server2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(channel1)) {
+            }
+            if(values.contains("channel")) {
                 defaultOptions.add(channel1);
                 channel = Emojis.yes();
                 channel2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(role1)) {
+            }
+            if(values.contains("role")) {
                 defaultOptions.add(role1);
                 role = Emojis.yes();
                 role2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(message1)) {
+            }
+            if(values.contains("message")) {
                 defaultOptions.add(message1);
                 message = Emojis.yes();
                 message2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(moderation1)) {
+            }
+            if(values.contains("moderation")) {
                 defaultOptions.add(moderation1);
                 moderation = Emojis.yes();
                 moderation2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(serverJoinLeave1)) {
+            }
+            if(values.contains("serverJoinLeave")) {
                 defaultOptions.add(serverJoinLeave1);
                 serverJoinLeave = Emojis.yes();
                 serverJoinLeave2 = true;
-            } else if(e.getInteraction().getSelectedOptions().contains(voiceJoinLeave1)) {
+            }
+            if(values.contains("voiceJoinLeave")) {
                 defaultOptions.add(voiceJoinLeave1);
                 voiceJoinLeave = Emojis.yes();
                 voiceJoinLeave2 = true;
