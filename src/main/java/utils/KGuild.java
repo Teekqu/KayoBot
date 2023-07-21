@@ -37,6 +37,9 @@ public class KGuild {
         this.g = guild;
     }
 
+    public Guild getGuild() {
+        return this.g;
+    }
     public String getName() {
         return this.g.getName();
     }
