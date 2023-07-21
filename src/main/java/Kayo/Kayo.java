@@ -64,6 +64,7 @@ public class Kayo {
         jda.addEventListener(new functions.AutoMod());
         jda.addEventListener(new functions.WelcomeMessages());
         jda.addEventListener(new functions.VoteReminder());
+        jda.addEventListener(new functions.Logging());
 
     }
 
