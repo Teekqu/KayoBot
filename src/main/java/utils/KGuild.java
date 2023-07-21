@@ -528,7 +528,7 @@ public class KGuild {
             return false;
         }
     }
-    public boolean deleteLogging(GuildMessageChannel ch) {
+    public boolean removeLogging(GuildMessageChannel ch) {
         if(this.getLogging(ch)==null) return false;
         Statement stm = MySQL.connect();
         try {
