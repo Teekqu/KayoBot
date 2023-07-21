@@ -5,9 +5,11 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.StringSelectInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import net.dv8tion.jda.api.interactions.InteractionHook;
+import net.dv8tion.jda.api.interactions.components.ActionRow;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import net.dv8tion.jda.api.interactions.components.selections.SelectOption;
 import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
@@ -241,7 +243,7 @@ public class Logging extends ListenerAdapter {
                     .setPlaceholder("📌 | Bearbeite die Log Aktionen")
                     .build();
 
-            ih.editOriginalEmbeds(embed.build()).setActionRow(btn).setActionRow(sm).queue();
+            ih.editOriginalEmbeds(embed.build()).setComponents(ActionRow.of(btn), ActionRow.of(sm)).queue();
 
         } else if(e.getInteraction().getComponentId().startsWith("logging.select.show.")) {
 
@@ -394,8 +396,61 @@ public class Logging extends ListenerAdapter {
                     .setPlaceholder("📌 | Bearbeite die Log Aktionen")
                     .build();
 
-            ih.editOriginalEmbeds(embed.build()).setActionRow(btn).setActionRow(sm).queue();
+            ih.editOriginalEmbeds(embed.build()).setComponents(ActionRow.of(btn), ActionRow.of(sm)).queue();
 
+        }
+
+    }
+
+    public void onButtonInteraction(ButtonInteractionEvent e) {
+
+        if(!e.getButton().getId().startsWith("logging.btn.show.")) return;
+        if(e.getGuild() == null || e.getMember() == null) return;
+
+        KGuild g = new KGuild(e.getGuild());
+        KUser u = new KUser(e.getUser());
+
+        if(!e.getMember().getPermissions().contains(Permission.ADMINISTRATOR)) {
+            e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
+            return;
+        }
+
+        InteractionHook ih = e.deferEdit().complete();
+
+        GuildMessageChannel ch = (GuildMessageChannel) e.getGuild().getGuildChannelById(e.getButton().getId().split("\\.")[3]);
+        String action = e.getButton().getId().split("\\.")[4];
+
+        if(ch == null) {
+            ih.editOriginalEmbeds(Embeds.error(g, u, "Ungültiger Channel")).queue();
+            return;
+        }
+
+        HashMap<String, String> map = g.getLogging(ch);
+        if(map == null) {
+            ih.editOriginalEmbeds(Embeds.error(g, u, "Ungültiger Channel")).queue();
+            return;
+        }
+
+        if(action.equals("delete")) {
+            g.removeLogging(ch);
+
+            EmbedBuilder embed = new EmbedBuilder()
+                    .setTitle(Emojis.yes() + " │ Erfolgreich!")
+                    .setDescription("Im Kanal "+ch.getAsMention()+" werden nun keine Aktionen mehr geloggt!")
+                    .setColor(Get.embedColor(true))
+                    .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
+                    .setThumbnail(e.getGuild().getIconUrl())
+                    .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
+
+            Button btn = Button.danger("logging.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete())).withDisabled(true);
+            StringSelectMenu sm = StringSelectMenu.create("logging.select.show."+ch.getId())
+                    .addOptions(SelectOption.of("None", "none.none.none"))
+                    .setMinValues(1)
+                    .setMaxValues(9)
+                    .setPlaceholder("📌 | Bearbeite die Log Aktionen")
+                    .setDisabled(true)
+                    .build();
+            ih.editOriginalEmbeds(embed.build()).setComponents(ActionRow.of(btn), ActionRow.of(sm)).queue();
         }
 
     }
