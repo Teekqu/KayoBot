@@ -67,6 +67,7 @@ public class Emojis {
     public static String bugHunter() { return "<:bugHunter:1130187873681932288>"; }
     public static String bugHunterGold() { return "<:bugHunterGold:1130187917705367635>"; }
     public static String earlySup() { return "<:earlySup:1130188040132907049>"; }
+    public static String load() { return "<a:k_load:1132032263991861321>"; }
     public static String partnerBadge() { return "<:partner:1130188279174680697>"; }
     public static String oldModAlumni() { return "<:oldModAlumni:1130187671352905839>"; }
     public static String modAlumni() { return "<:modAlumni:1130187622514434138>"; }
