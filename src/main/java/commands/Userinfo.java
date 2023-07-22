@@ -39,7 +39,7 @@ public class Userinfo extends ListenerAdapter {
         String nick = m.getNickname();
         if(nick == null) nick = "None";
         String booster = Emojis.no();
-        if(g.getBoosters().contains(m)) booster = Emojis.yes()+" (<t:"+m.getTimeBoosted().toInstant().getEpochSecond()+":R>";
+        if(g.getBoosters().contains(m)) booster = Emojis.yes()+" (<t:"+m.getTimeBoosted().toInstant().getEpochSecond()+":R>)";
         String badges = this.getBadgeEmojisFromUser(mU);
 
 
