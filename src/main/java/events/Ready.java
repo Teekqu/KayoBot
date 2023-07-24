@@ -36,6 +36,8 @@ public class Ready extends ListenerAdapter {
              e.getJDA().getPresence().setPresence(OnlineStatus.ONLINE, Activity.playing("einen Bot"));
          }
 
+         Kayo.Kayo.isReady = true;
+
     }
 
     private void loadCommands() {
@@ -101,12 +103,12 @@ public class Ready extends ListenerAdapter {
                 .addSubcommands(welcomeaddcmd, welcomeshowcmd, welcomevariablescmd)
                 .setGuildOnly(true).queue();
 
-        //OptionData loggingadddata = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Channel", true).setChannelTypes(ChannelType.TEXT);
-        //SubcommandData loggingaddcmd = new SubcommandData("add", "Füge einen neuen Logging Kanal hinzu").addOptions(loggingadddata);
-        //SubcommandData loggingshowcmd = new SubcommandData("show", "Siehe alle Logging Kanäle");
-        //jda.upsertCommand("logging", "Verwalte das Logging System")
-        //.addSubcommands(loggingaddcmd, loggingshowcmd)
-        //.setGuildOnly(true).queue();
+        OptionData loggingadddata = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Channel", true).setChannelTypes(ChannelType.TEXT);
+        SubcommandData loggingaddcmd = new SubcommandData("add", "Füge einen neuen Logging Kanal hinzu").addOptions(loggingadddata);
+        SubcommandData loggingshowcmd = new SubcommandData("show", "Siehe alle Logging Kanäle");
+        jda.upsertCommand("logging", "Verwalte das Logging System")
+                .addSubcommands(loggingaddcmd, loggingshowcmd)
+                .setGuildOnly(true).queue();
 
         jda.upsertCommand("ping", "Pong! Zeige den Ping des Bots an").setGuildOnly(true).queue();
 
