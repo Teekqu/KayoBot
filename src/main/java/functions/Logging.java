@@ -67,6 +67,11 @@ public class Logging extends ListenerAdapter {
 
             GuildMessageChannel ch = e.getOption("channel").getAsChannel().asGuildMessageChannel();
 
+            if(g.getLogging().size() >= Get.limit("loggingChannel", g.hasPremium())) {
+                ih.editOriginalEmbeds(Embeds.error(g, u, "Der Server hat das Limit erreicht!")).queue();
+                return;
+            }
+
             if(g.getLogging(ch)!=null) {
                 ih.editOriginalEmbeds(Embeds.error(g, u, "In dem Kanal wird bereits geloggt!")).queue();
                 return;
