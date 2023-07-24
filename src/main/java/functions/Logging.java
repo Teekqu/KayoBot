@@ -4,14 +4,16 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.audit.ActionType;
 import net.dv8tion.jda.api.audit.AuditLogEntry;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.channel.ChannelCreateEvent;
 import net.dv8tion.jda.api.events.channel.ChannelDeleteEvent;
 import net.dv8tion.jda.api.events.channel.update.*;
 import net.dv8tion.jda.api.events.guild.GuildAuditLogEntryCreateEvent;
-import net.dv8tion.jda.api.events.guild.GuildBanEvent;
-import net.dv8tion.jda.api.events.guild.GuildTimeoutEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberJoinEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.member.GuildMemberRoleAddEvent;
@@ -40,6 +42,7 @@ import net.dv8tion.jda.api.interactions.components.selections.StringSelectMenu;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import utils.*;
 
+import java.awt.*;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -115,7 +118,7 @@ public class Logging extends ListenerAdapter {
             if(sb.toString().equals("")) sb.append(Emojis.warning()+" *Es wurden keine Einträge gefunden!*");
 
             EmbedBuilder embed = new EmbedBuilder()
-                    .setTitle(Emojis.archive() + " | **Logging**")
+                    .setTitle(Emojis.archive() + " │ **Logging**")
                     .setDescription(sb.toString())
                     .setColor(Get.embedColor())
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
@@ -246,7 +249,7 @@ public class Logging extends ListenerAdapter {
 
                     .addBlankField(false)
                     .addField(Emojis.crone()+" - Member Logs", member, true)
-                    .addField(Emojis.user()+" - User Logs", user, true)
+                    .addField( "User Logs", user, true)
                     .addBlankField(false)
                     .addField(Emojis.data()+" - Server Logs", server, true)
                     .addField(Emojis.channel()+" - Channel Logs", channel, true)
@@ -399,7 +402,7 @@ public class Logging extends ListenerAdapter {
 
                     .addBlankField(false)
                     .addField(Emojis.crone()+" - Member Logs", member, true)
-                    .addField(Emojis.user()+" - User Logs", user, true)
+                    .addField( "User Logs", user, true)
                     .addBlankField(false)
                     .addField(Emojis.data()+" - Server Logs", server, true)
                     .addField(Emojis.channel()+" - Channel Logs", channel, true)
@@ -486,11 +489,39 @@ public class Logging extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle("**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat seinen Nicknamen geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField("User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField("Vorher", e.getOldNickname(), true)
+                .addField("Nachher", e.getNewNickname(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildMemberUpdateAvatar(GuildMemberUpdateAvatarEvent e) {
         KGuild g = new KGuild(e.getGuild());
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle("**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat sein Avatar geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField("User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField("Vorher", "[klick]("+e.getOldAvatarUrl()+")", true)
+                .addField("Nachher", "[klick]("+e.getNewAvatarUrl()+")", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onGuildMemberRoleAdd(GuildMemberRoleAddEvent e) {
@@ -498,27 +529,106 @@ public class Logging extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle("**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat eine neue Rolle bekommen")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField("User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField("Rolle", e.getRoles().get(0).getAsMention()+" ("+e.getRoles().get(0).getName()+")", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildMemberRoleRemove(GuildMemberRoleRemoveEvent e) {
         KGuild g = new KGuild(e.getGuild());
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "member");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle("**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat eine Rolle entfernt bekommen")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField( "User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField( "Rolle", e.getRoles().get(0).getAsMention()+" ("+e.getRoles().get(0).getName()+")", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
 
     public void onUserUpdateName(UserUpdateNameEvent e) {
         KUser u = new KUser(e.getUser());
-        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat seinen Namen geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField( "User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField( "Vorher", e.getOldName(), true)
+                .addField( "Nachher", e.getNewName(), true);
+
+        Collection<Guild> guilds = e.getUser().getMutualGuilds();
+        guilds.forEach(g -> {
+            KGuild g1 = new KGuild(g);
+            Collection<GuildMessageChannel> channels = this.getLoggingChannel(g1, "user");
+            channels.forEach(ch -> {
+                this.sendWebhookInChannel(ch, embed);
+            });
+        });
 
     }
     public void onUserUpdateGlobalName(UserUpdateGlobalNameEvent e) {
         KUser u = new KUser(e.getUser());
-        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat seinen Username geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField( "User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField( "Vorher", e.getOldGlobalName(), true)
+                .addField( "Nachher", e.getNewGlobalName(), true);
+
+        Collection<Guild> guilds = e.getUser().getMutualGuilds();
+        guilds.forEach(g -> {
+            KGuild g1 = new KGuild(g);
+            Collection<GuildMessageChannel> channels = this.getLoggingChannel(g1, "user");
+            channels.forEach(ch -> {
+                this.sendWebhookInChannel(ch, embed);
+            });
+        });
 
     }
     public void onUserUpdateAvatar(UserUpdateAvatarEvent e) {
         KUser u = new KUser(e.getUser());
-        Collection<GuildMessageChannel> channels = this.getLoggingChannel("user");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat sein Avatar geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(u.getEffectiveAvatarUrl())
+
+                .addField( "User", u.getAsMention()+" ("+u.getUsername()+")", true)
+                .addField( "Vorher", "[klick]("+e.getOldAvatarUrl()+")", true)
+                .addField( "Nachher", "[klick]("+e.getNewAvatarUrl()+")", true);
+
+        Collection<Guild> guilds = e.getUser().getMutualGuilds();
+        guilds.forEach(g -> {
+            KGuild g1 = new KGuild(g);
+            Collection<GuildMessageChannel> channels = this.getLoggingChannel(g1, "user");
+            channels.forEach(ch -> {
+                this.sendWebhookInChannel(ch, embed);
+            });
+        });
 
     }
 
@@ -526,50 +636,210 @@ public class Logging extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
 
+        String oldAfkChannel = "None";
+        if(e.getOldAfkChannel() != null) oldAfkChannel = e.getOldAfkChannel().getAsMention();
+        String newAfkChannel = "None";
+        if(e.getNewAfkChannel() != null) newAfkChannel = e.getNewAfkChannel().getAsMention();
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild AFK Channel wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldAfkChannel, true)
+                .addField( "Nachher", newAfkChannel, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildUpdateAfkTimeout(GuildUpdateAfkTimeoutEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild AFK Timeout wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldAfkTimeout().getSeconds()+" Sekunden", true)
+                .addField( "Nachher", e.getNewAfkTimeout().getSeconds()+" Sekunden", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onGuildUpdateBanner(GuildUpdateBannerEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Das Guild Banner wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", "[klick]("+e.getOldBannerUrl()+")", true)
+                .addField( "Nachher", "[klick]("+e.getNewBannerUrl()+")", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildUpdateDescription(GuildUpdateDescriptionEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Die Guild Beschreibung wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldDescription(), true)
+                .addField( "Nachher", e.getNewDescription(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onGuildUpdateIcon(GuildUpdateIconEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Das Guild Icon wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", "[klick]("+e.getOldIconUrl()+")", true)
+                .addField( "Nachher", "[klick]("+e.getNewIconUrl()+")", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildUpdateName(GuildUpdateNameEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild Name wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldName(), true)
+                .addField( "Nachher", e.getNewName(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onGuildUpdateOwner(GuildUpdateOwnerEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
 
+        String oldOwner = "None";
+        String newOwner = "None";
+        if(e.getOldOwner() != null) oldOwner = e.getOldOwner().getAsMention()+" ("+e.getOldOwner().getUser().getName()+")";
+        if(e.getNewOwner() != null) newOwner = e.getNewOwner().getAsMention()+" ("+e.getNewOwner().getUser().getName()+")";
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild Owner wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldOwner, true)
+                .addField( "Nachher", newOwner, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildUpdateRulesChannel(GuildUpdateRulesChannelEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+        String oldChannel = "None";
+        String newChannel = "None";
+        if(e.getOldRulesChannel() != null) oldChannel = e.getOldRulesChannel().getAsMention();
+        if(e.getNewRulesChannel() != null) newChannel = e.getNewRulesChannel().getAsMention();
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild Regel Channel wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldChannel, true)
+                .addField( "Nachher", newChannel, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onGuildUpdateSystemChannel(GuildUpdateSystemChannelEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
 
+        String oldChannel = "None";
+        String newChannel = "None";
+        if(e.getOldSystemChannel() != null) oldChannel = e.getOldSystemChannel().getAsMention();
+        if(e.getNewSystemChannel() != null) newChannel = e.getNewSystemChannel().getAsMention();
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Guild Regel Channel wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldChannel, true)
+                .addField( "Nachher", newChannel, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildUpdateVanityCode(GuildUpdateVanityCodeEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "server");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Die Vanity URL wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldVanityUrl(), true)
+                .addField( "Nachher", e.getNewVanityUrl(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
 
@@ -577,45 +847,184 @@ public class Logging extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Kanal wurde erstellt")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Kanal", e.getChannel().getAsMention(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onChannelDelete(ChannelDeleteEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Kanal wurde gelöscht")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Kanal", e.getChannel().getAsMention(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onChannelUpdateName(ChannelUpdateNameEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Kanal Name wurde bearbeitet")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldValue(), true)
+                .addField( "Nachher", e.getNewValue(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onChannelUpdateNSFW(ChannelUpdateNSFWEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Kanal NSFW Stufe wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldValue().toString(), true)
+                .addField( "Nachher", e.getNewValue().toString(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onChannelUpdateParent(ChannelUpdateParentEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
 
+        String oldChannel = "None";
+        String newChannel = "None";
+        if(e.getOldValue() != null) oldChannel = e.getOldValue().getName();
+        if(e.getNewValue() != null) newChannel = e.getNewValue().getName();
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Kanal wurde in eine neue Kategorie verschoben")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldChannel, true)
+                .addField( "Nachher", newChannel, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onChannelUpdateSlowmode(ChannelUpdateSlowmodeEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+        String before = "0 Sekunden";
+        String after = "0 Sekunden";
+        if(e.getOldValue() != null) before = e.getOldValue()+" Sekunden";
+        if(e.getNewValue() != null) after = e.getNewValue()+" Sekunden";
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Der Slowmode eines Kanals wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", before, true)
+                .addField( "Nachher", after, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onChannelUpdateTopic(ChannelUpdateTopicEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Kanal Beschreibung wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldValue(), true)
+                .addField( "Nachher", e.getNewValue(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onChannelUpdateType(ChannelUpdateTypeEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Kanal Typ wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldValue().name(), true)
+                .addField( "Nachher", e.getNewValue().name(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onChannelUpdateUserLimit(ChannelUpdateUserLimitEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "channel");
+
+        String oldLimit = "0";
+        String newLimit = "0";
+        if(e.getOldValue() != null) oldLimit = String.valueOf(e.getOldValue());
+        if(e.getNewValue() != null) newLimit = String.valueOf(e.getNewValue());
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Kanal Userlimit wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldLimit, true)
+                .addField( "Nachher", newLimit, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
 
@@ -623,59 +1032,230 @@ public class Logging extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Rolle wurde erstellt")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Rolle", e.getRole().getAsMention(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onRoleDelete(RoleDeleteEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Rolle wurde gelöscht")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Rolle", e.getRole().getName(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onRoleUpdateColor(RoleUpdateColorEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
 
+        String oldColor = "None";
+        String newColor = "None";
+        if(e.getOldColor() != null) oldColor = this.convertColorToHex(e.getOldColor());
+        if(e.getNewColor() != null) newColor = this.convertColorToHex(e.getNewColor());
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Rollen Farbe wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldColor, true)
+                .addField( "Nachher", newColor, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onRoleUpdateHoisted(RoleUpdateHoistedEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Rollenanzeige wurde geändert (hoisted)")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldValue().toString(), true)
+                .addField( "Nachher", e.getNewValue().toString(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onRoleUpdateIcon(RoleUpdateIconEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
 
+        String oldIconUrl = "None";
+        String newIconUrl = "None";
+        if(e.getOldIcon() != null) oldIconUrl = "[klick]("+e.getOldIcon().getIconUrl()+")";
+        if(e.getNewIcon() != null) newIconUrl = "[klick]("+e.getNewIcon().getIconUrl()+")";
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Rollen Icon wurde geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldIconUrl, true)
+                .addField( "Nachher", newIconUrl, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onRoleUpdateName(RoleUpdateNameEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein Rollen Name wurde bearbeitet")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", e.getOldName(), true)
+                .addField( "Nachher", e.getNewName(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onRoleUpdatePermissions(RoleUpdatePermissionsEvent e) {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "role");
 
+        StringBuilder oldPerms = new StringBuilder();
+        StringBuilder newPerms = new StringBuilder();
+
+        e.getOldPermissions().forEach(perm -> {
+            oldPerms.append(perm.getName()).append(" ");
+        });
+        e.getNewPermissions().forEach(perm -> {
+            newPerms.append(perm.getName()).append(" ");
+        });
+        if(oldPerms.toString().equals("")) oldPerms.append("-");
+        if(newPerms.toString().equals("")) newPerms.append("-");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Die Rechte einer Rolle wurden geändert")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Server", g.getName(), true)
+                .addField( "Vorher", oldPerms.toString(), true)
+                .addField( "Nachher", newPerms.toString(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
 
     public void onMessageUpdate(MessageUpdateEvent e) {
+        if(!e.isFromGuild()) return;
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "message");
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Nachricht wurde bearbeitet")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Nachricht", "[klick]("+e.getMessage().getJumpUrl()+")", true)
+                .addField( "Vorher", "Unknown", true)
+                .addField( "Nachher", e.getMessage().getContentRaw(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
     public void onMessageDelete(MessageDeleteEvent e) {
+        if(!e.isFromGuild()) return;
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "message");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Eine Nachricht wurde gelöscht")
+                .setColor(Get.embedColor())
+                .setThumbnail(g.getIconUrl())
+
+                .addField( "Channel", e.getChannel().getAsMention(), true)
+                .addField( "Message ID", e.getMessageId(), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
 
-    public void onGuildBan(GuildBanEvent e) {
-        KGuild g = new KGuild(e.getGuild());
-        KUser u = new KUser(e.getUser());
-        Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "moderation");
-
-    }
     public void onGuildAuditLogEntryCreate(GuildAuditLogEntryCreateEvent e) {
         AuditLogEntry entry = e.getEntry();
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "moderation");
+
+        if(entry.getType().equals(ActionType.BAN)) {
+            Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                    .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                    .setDescription("Ein User wurde gebannt")
+                    .setColor(Get.embedColor())
+                    .setThumbnail(g.getIconUrl())
+
+                    .addField( "User", UserSnowflake.fromId(entry.getTargetId()).getAsMention(), true)
+                    .addField(Emojis.supportman()+" - Moderator", entry.getUser().getAsMention()+" ("+entry.getUser().getName()+")", true)
+                    .addField(Emojis.pen()+" - Grund", entry.getReason(), true);
+
+            channels.forEach(ch -> {
+                this.sendWebhookInChannel(ch, embed);
+            });
+        } else if(entry.getType().equals(ActionType.KICK)) {
+            Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                    .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                    .setDescription("Ein User wurde gekickt")
+                    .setColor(Get.embedColor())
+                    .setThumbnail(g.getIconUrl())
+
+                    .addField( "User", UserSnowflake.fromId(entry.getTargetId()).getAsMention(), true)
+                    .addField(Emojis.supportman()+" - Moderator", entry.getUser().getAsMention()+" ("+entry.getUser().getName()+")", true)
+                    .addField(Emojis.pen()+" - Grund", entry.getReason(), true);
+
+            channels.forEach(ch -> {
+                this.sendWebhookInChannel(ch, embed);
+            });
+        }
 
     }
 
@@ -684,11 +1264,40 @@ public class Logging extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "serverJoinLeave");
 
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User ist dem Server beigetreten")
+                .setColor(Get.embedColor())
+                .setThumbnail(e.getMember().getEffectiveAvatarUrl())
+
+                .addField( "User", e.getMember().getAsMention()+" ("+e.getUser().getName()+")", true)
+                .addField(Emojis.clock()+" - Erstellt", "<t:"+e.getUser().getTimeCreated().toInstant().getEpochSecond()+"> (<t:"+e.getUser().getTimeCreated().toInstant().getEpochSecond()+":R>", true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
+
     }
     public void onGuildMemberRemove(GuildMemberRemoveEvent e) {
         KGuild g = new KGuild(e.getGuild());
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "serverJoinLeave");
+
+        long seconds = (TimeFormat.RELATIVE.now().toInstant().getEpochSecond()-e.getMember().getTimeJoined().toInstant().getEpochSecond());
+
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat den Server verlassen")
+                .setColor(Get.embedColor())
+                .setThumbnail(e.getMember().getEffectiveAvatarUrl())
+
+                .addField( "User", e.getMember().getAsMention()+" ("+e.getUser().getName()+")", true)
+                .addField(Emojis.clock()+" - Erstellt", "<t:"+e.getUser().getTimeCreated().toInstant().getEpochSecond()+"> (<t:"+e.getUser().getTimeCreated().toInstant().getEpochSecond()+":R>", true)
+                .addField(Emojis.stats()+" - Zeit auf dem Server", this.convertSecondsInFormat(seconds), true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
+        });
 
     }
 
@@ -696,24 +1305,29 @@ public class Logging extends ListenerAdapter {
         KGuild g = new KGuild(e.getGuild());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "voiceJoinLeave");
 
-    }
+        String oldVoice = "None";
+        String newVoice = "None";
+        if(e.getOldValue() != null) oldVoice = e.getOldValue().getAsMention();
+        if(e.getNewValue() != null) newVoice = e.getNewValue().getAsMention();
 
-    private Collection<GuildMessageChannel> getLoggingChannel(String name) {
+        Webhook.EmbedObject embed = new Webhook.EmbedObject()
+                .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
+                .setDescription("Ein User hat den Voice gewechselt")
+                .setColor(Get.embedColor())
+                .setThumbnail(e.getMember().getEffectiveAvatarUrl())
 
-        Collection<GuildMessageChannel> channels = new ArrayList<>();
-        Kayo.Kayo.getJda().getGuilds().forEach(guild -> {
-            KGuild g = new KGuild(guild);
-            g.getLogging().forEach(map -> {
-                if(Boolean.parseBoolean(map.get(name))) {
-                    GuildMessageChannel ch = (GuildMessageChannel) g.getGuild().getGuildChannelById(map.get("channelId"));
-                    if(ch != null) channels.add(ch);
-                }
-            });
+                .addField( "User", e.getMember().getAsMention()+" ("+e.getMember().getUser().getName()+")", true)
+                .addField( "Vorher", oldVoice, true)
+                .addField( "Nachher", newVoice, true);
+
+        channels.forEach(ch -> {
+            this.sendWebhookInChannel(ch, embed);
         });
-        return channels;
 
     }
+
     private Collection<GuildMessageChannel> getLoggingChannel(KGuild g, String name) {
+        if(!Kayo.Kayo.isReady) return new ArrayList<>();
 
         Collection<GuildMessageChannel> channels = new ArrayList<>();
         g.getLogging().forEach(map -> {
@@ -723,6 +1337,78 @@ public class Logging extends ListenerAdapter {
             }
         });
         return channels;
+
+    }
+    private void sendWebhookInChannel(GuildMessageChannel ch, Webhook.EmbedObject embed) {
+        if(!Kayo.Kayo.isReady) return;
+
+        boolean check = false;
+        for(net.dv8tion.jda.api.entities.Webhook wh : ch.getGuild().retrieveWebhooks().complete()) {
+            if(wh.getChannel().asGuildMessageChannel().equals(ch) || wh.getChannel().equals(ch)) {
+                try {
+                    String url = wh.getUrl();
+                    Webhook webhook = new Webhook(url);
+                    webhook.addEmbed(embed);
+                    webhook.setUsername(Kayo.Kayo.getJda().getSelfUser().getName() + " - Logging");
+                    webhook.setAvatarUrl(Kayo.Kayo.getJda().getSelfUser().getEffectiveAvatarUrl());
+                    webhook.execute();
+                    check = true;
+                    break;
+                } catch (Exception ignored) { }
+            }
+        }
+        if(!check) {
+            try {
+                net.dv8tion.jda.api.entities.Webhook wh = ((TextChannel) ch).createWebhook(Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging").complete();
+                String url = wh.getUrl();
+                Webhook webhook = new Webhook(url);
+                webhook.addEmbed(embed);
+                webhook.setUsername(Kayo.Kayo.getJda().getSelfUser().getName() + " - Logging");
+                webhook.setAvatarUrl(Kayo.Kayo.getJda().getSelfUser().getEffectiveAvatarUrl());
+                webhook.execute();
+            } catch (Exception ignored) { }
+        }
+
+    }
+
+    private String convertColorToHex(Color color) {
+        return "#"+Integer.toHexString(color.getRGB()).substring(2);
+    }
+
+    private String convertSecondsInFormat(Long seconds) {
+
+        long days = seconds / (60 * 60 * 24);
+        long remainder = seconds % (60 * 60 * 24);
+
+        long hours = remainder / (60 * 60);
+        remainder = remainder % (60 * 60);
+
+        long mins = remainder / (60);
+        remainder = remainder % (60);
+
+        long secs = remainder;
+
+        String strDaysHrsMinsSecs = "";
+
+        if (days > 0) {
+            strDaysHrsMinsSecs += days + "d ";
+        }
+
+        if (hours > 0) {
+            strDaysHrsMinsSecs += hours + "h ";
+        } else {
+            strDaysHrsMinsSecs += "0h ";
+        }
+
+        if (mins > 0) {
+            strDaysHrsMinsSecs += mins + "m ";
+        } else {
+            strDaysHrsMinsSecs += "0m ";
+        }
+
+        strDaysHrsMinsSecs += secs + "s";
+
+        return strDaysHrsMinsSecs;
 
     }
 
