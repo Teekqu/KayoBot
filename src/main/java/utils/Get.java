@@ -72,6 +72,8 @@ public class Get {
 
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept", "application/json");
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
             conn.setRequestProperty("Authorization", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjExMjQ3ODUxMzMwMDI2ODY1MjQiLCJib3QiOnRydWUsImlhdCI6MTY4OTY5MDM5OH0.HMasoFC67I2eTYtrQJ5CJtQdB025SzjM5SrLlNFl6nw");
             conn.setDoOutput(true);
 
