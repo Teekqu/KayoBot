@@ -16,6 +16,7 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class Kayo {
 
     private static JDA jda;
+    public static boolean isReady = false;
 
     public static void main(String[] args) {
 
