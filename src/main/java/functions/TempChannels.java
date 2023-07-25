@@ -5,9 +5,7 @@ import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
-import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
-import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.interaction.ModalInteractionEvent;
@@ -27,6 +25,7 @@ import utils.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -65,9 +64,11 @@ public class TempChannels extends ListenerAdapter {
                     ih.editOriginalEmbeds(Embeds.error(g, u, "Unbekannter Fehler")).queue();
                     return;
                 }
+                String text = "";
+                if(category != null) text = "\nAlle erstellen TempChannels werden in der Kategorie "+category.getAsMention()+" erstellt.";
                 EmbedBuilder embed = new EmbedBuilder()
                         .setTitle(Emojis.yes() + " │ Erfolgreich!")
-                        .setDescription("Der Kanal "+ch.getAsMention()+" ist nun ein JoinHub!\nAlle erstellen TempChannels werden in der Kategorie "+category.getAsMention()+" erstellt.")
+                        .setDescription("Der Kanal "+ch.getAsMention()+" ist nun ein JoinHub!"+text)
                         .setColor(Get.embedColor(true))
                         .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                         .setThumbnail(e.getGuild().getIconUrl())
@@ -194,6 +195,11 @@ public class TempChannels extends ListenerAdapter {
                              perm.getManager().setDenied(Permission.VOICE_CONNECT).queue();
                          }
                      });
+                     if(ch.getPermissionOverride(e.getGuild().getPublicRole()) == null) {
+                         try { ch.getManager().putPermissionOverride(e.getGuild().getPublicRole(), null, EnumSet.of(Permission.VOICE_CONNECT)).queue(); } catch (Exception ignored) { }
+                     } else {
+                         try { ch.getPermissionOverride(e.getGuild().getPublicRole()).getManager().setDenied(Permission.VOICE_CONNECT); } catch (Exception ignored) { }
+                     }
                      ih.editOriginal(Emojis.yes()+" | **Der Kanal wurde erfolgreich gesperrt!**").queue();
                 } catch (Exception err) {
                     ih.editOriginalEmbeds(Embeds.error(g, u, err.getMessage())).queue();
@@ -224,6 +230,11 @@ public class TempChannels extends ListenerAdapter {
                     ch.getPermissionOverrides().forEach(perm -> {
                         if(!perm.isMemberOverride() || perm.getMember() == null || (!mods.contains(perm.getMember().getUser()) && !perm.getMember().getId().equals(userId))) {
                             perm.getManager().setDenied(Permission.VIEW_CHANNEL).queue();
+                        }
+                        if(ch.getPermissionOverride(e.getGuild().getPublicRole()) == null) {
+                            try { ch.getManager().putPermissionOverride(e.getGuild().getPublicRole(), null, EnumSet.of(Permission.VIEW_CHANNEL)).queue(); } catch (Exception ignored) { }
+                        } else {
+                            try { ch.getPermissionOverride(e.getGuild().getPublicRole()).getManager().setDenied(Permission.VIEW_CHANNEL); } catch (Exception ignored) { }
                         }
                     });
                     ih.editOriginal(Emojis.yes()+" | **Der Kanal wurde erfolgreich versteckt!**").queue();
@@ -451,7 +462,7 @@ public class TempChannels extends ListenerAdapter {
 
     public void onStringSelectInteraction(StringSelectInteractionEvent e) {
 
-        if(!e.getInteraction().getId().equals("joinhubs.select.show")) return;
+        if(!e.getInteraction().getSelectMenu().getId().equals("joinhubs.select.show")) return;
         if(e.getGuild() == null || e.getMember() == null) return;
 
         KGuild g = new KGuild(e.getGuild());
@@ -532,7 +543,7 @@ public class TempChannels extends ListenerAdapter {
                     .setValue(map.get("name"))
                     .setRequired(true)
                     .setMinLength(1)
-                    .setMaxLength(16)
+                    .setMaxLength(25)
                     .build();
             Modal modal = Modal.create("joinhubs.modal.edit."+ch.getId()+".name", "JoinHub - Namen ändern")
                     .addActionRow(ti)
@@ -564,7 +575,7 @@ public class TempChannels extends ListenerAdapter {
             Button btn1 = Button.primary("joinhubs.btn.edit."+ch.getId()+".name", "Namen ändern").withEmoji(Emoji.fromFormatted(Emojis.pen())).withDisabled(true);
             Button btn2 = Button.primary("joinhubs.btn.edit."+ch.getId()+".limit", "Limit ändern").withEmoji(Emoji.fromFormatted(Emojis.pin())).withDisabled(true);
             Button btn3 = Button.danger("joinhubs.btn.edit."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete())).withDisabled(true);
-            e.replyEmbeds(embed.build()).setActionRow(btn1, btn2, btn3).queue();
+            e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3).queue();
         }
 
     }
@@ -652,7 +663,7 @@ public class TempChannels extends ListenerAdapter {
             }
         }
         if(e.getChannelJoined() != null) {
-            VoiceChannel ch = e.getChannelLeft().asVoiceChannel();
+            VoiceChannel ch = e.getChannelJoined().asVoiceChannel();
             HashMap<String, String> map = g.getTempChannel(ch);
             if(map != null) {
                 for(String s : map.get("bans").split(";")) {
@@ -668,8 +679,12 @@ public class TempChannels extends ListenerAdapter {
                     if(!map.get("categoryId").equals("0")) category = e.getGuild().getCategoryById(map.get("categoryId"));
                     String name = map.get("name");
                     int limit = Integer.parseInt(map.get("limit"));
-                    VoiceChannel channel = e.getGuild().createVoiceChannel(this.replaceName(name, e.getMember().getUser()), category).setUserlimit(limit).complete();
+                    VoiceChannel channel = e.getGuild().createVoiceChannel(this.replaceName(name, e.getMember().getUser()), category)
+                            .setUserlimit(limit)
+                            .addPermissionOverride(e.getMember(), EnumSet.of(Permission.VIEW_CHANNEL, Permission.VOICE_SPEAK, Permission.VOICE_CONNECT), null)
+                            .complete();
                     g.addTempChannel(channel, e.getMember().getUser());
+                    e.getGuild().moveVoiceMember(e.getMember(), channel).queue();
 
                 } catch (Exception ignored) { }
             }
