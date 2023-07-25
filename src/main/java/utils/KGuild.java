@@ -745,7 +745,7 @@ public class KGuild {
         }
     }
     public boolean removeTempChannel(VoiceChannel ch) {
-        if(this.getJoinHub(ch) == null) return false;
+        if(this.getTempChannel(ch) == null) return false;
         Statement stm = MySQL.connect();
         try {
             stm.execute("DELETE FROM TempChannels WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
