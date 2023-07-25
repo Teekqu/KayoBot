@@ -591,9 +591,9 @@ public class KGuild {
         if(this.getJoinHub(ch) != null) return false;
         Statement stm = MySQL.connect();
         try {
-            long categoryId = 0;
-            if(category != null) categoryId = category.getIdLong();
-            stm.execute("INSERT INTO JoinHubs(guildId, channelId, categoryId, name, limit) VALUES("+this.g.getId()+","+ch.getId()+","+categoryId+",'"+name+"',"+limit+");");
+            String categoryId = "0";
+            if(category != null) categoryId = category.getId();
+            stm.execute("INSERT INTO JoinHubs(guildId,channelId,categoryId,name,defaultLimit) VALUES("+this.g.getId()+","+ch.getId()+","+categoryId+",'"+name+"',"+limit+")");
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
@@ -608,7 +608,7 @@ public class KGuild {
         try {
             long categoryId = 0;
             if(category != null) categoryId = category.getIdLong();
-            stm.execute("UPDATE JoinHubs SET categoryId="+categoryId+",name='"+name+"',limit="+limit+" WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
+            stm.execute("UPDATE JoinHubs SET categoryId="+categoryId+",name='"+name+"',defaultLimit="+limit+" WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
             try { stm.close(); } catch (Exception ignored) { }
             return true;
         } catch (Exception err) {
