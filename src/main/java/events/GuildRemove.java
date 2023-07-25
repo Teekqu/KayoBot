@@ -1,6 +1,7 @@
 package events;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.guild.GuildJoinEvent;
 import net.dv8tion.jda.api.events.guild.GuildLeaveEvent;
@@ -48,6 +49,18 @@ public class GuildRemove extends ListenerAdapter {
         if(url == null) url = "https://i.timo1005.de/Kayo.png";
         Button btn1 = Button.link(url, "Icon URL").withEmoji(Emoji.fromFormatted(Emojis.link())).withDisabled(url.equals("https://i.timo1005.de/Kayo.png"));
         try { Kayo.Kayo.getJda().getTextChannelById("1130521728225910874").sendMessageEmbeds(embed.build()).setActionRow(btn1).queue(); } catch (Exception ignored) { }
+
+        g.getAutoDelete().forEach(map -> {
+            g.removeAutoDelete((GuildMessageChannel) e.getGuild().getGuildChannelById(map.get("channelId")));
+        });
+        g.getAutoReact().forEach(g::removeAutoReact);
+        g.getJoinRolesList().forEach(g::removeJoinRole);
+        g.getLogging().forEach(map -> {
+            g.removeLogging((GuildMessageChannel) e.getGuild().getGuildChannelById(map.get("channelId")));
+        });
+        g.getWelcomeMessages().forEach(map -> {
+            g.removeWelcomeMessage((GuildMessageChannel) e.getGuild().getGuildChannelById(map.get("channelId")));
+        });
 
     }
 
