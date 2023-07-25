@@ -1288,7 +1288,10 @@ public class Logging extends ListenerAdapter {
         KUser u = new KUser(e.getUser());
         Collection<GuildMessageChannel> channels = this.getLoggingChannel(g, "serverJoinLeave");
 
-        long seconds = (TimeFormat.RELATIVE.now().toInstant().getEpochSecond()-e.getMember().getTimeJoined().toInstant().getEpochSecond());
+        long seconds = 0;
+        if(e.getMember() != null) {
+            seconds = (TimeFormat.RELATIVE.now().toInstant().getEpochSecond()-e.getMember().getTimeJoined().toInstant().getEpochSecond());
+        }
 
         Webhook.EmbedObject embed = new Webhook.EmbedObject()
                 .setTitle( "**"+Kayo.Kayo.getJda().getSelfUser().getName()+" - Logging**")
