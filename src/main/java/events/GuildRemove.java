@@ -61,6 +61,8 @@ public class GuildRemove extends ListenerAdapter {
         g.getWelcomeMessages().forEach(map -> {
             g.removeWelcomeMessage((GuildMessageChannel) e.getGuild().getGuildChannelById(map.get("channelId")));
         });
+        g.getTempChannels().forEach(g::removeTempChannel);
+        g.getJoinHubs().forEach(g::removeJoinHub);
 
     }
 
