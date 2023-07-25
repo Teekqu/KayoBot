@@ -74,6 +74,22 @@ public class TempChannels extends ListenerAdapter {
                         .setThumbnail(e.getGuild().getIconUrl())
                         .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
                 ih.editOriginalEmbeds(embed.build()).queue();
+            } else if(e.getSubcommandName().equals("variables")) {
+
+                EmbedBuilder embed = new EmbedBuilder()
+                        .setTitle(Emojis.join()+" │ **JoinHub - Variables**")
+                        .setDescription("Du kannst folgende Variabeln bei deinem JoinHub Standard Namen nutzen:")
+                        .setColor(Get.embedColor())
+                        .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
+                        .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
+                        .setThumbnail(g.getIconUrl())
+
+                        .addBlankField(false)
+                        .addField(Emojis.pen()+" - %NAME%", u.getUsername(), true)
+                        .addField(Emojis.idea()+" - %ID%", u.getId(), true);
+                e.replyEmbeds(embed.build()).setEphemeral(true).queue();
+                return;
+
             }
 
         } else if(e.getName().equals("joinhubs")) {
