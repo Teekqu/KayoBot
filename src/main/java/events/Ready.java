@@ -112,6 +112,29 @@ public class Ready extends ListenerAdapter {
 
         jda.upsertCommand("ping", "Pong! Zeige den Ping des Bots an").setGuildOnly(true).queue();
 
+        OptionData createjoinhubdata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen VoiceChannel", true).setChannelTypes(ChannelType.VOICE);
+        OptionData createjoinhubdata2 = new OptionData(OptionType.CHANNEL, "category", "Wähle eine Kategorie", false).setChannelTypes(ChannelType.CATEGORY);
+        SubcommandData joinhubaddcmd = new SubcommandData("add", "Füge ein JoinHub hinzu").addOptions(createjoinhubdata1, createjoinhubdata2);
+        SubcommandData joinhubvariablescmd = new SubcommandData("variables", "Siehe alle JoinHub Variablen");
+        jda.upsertCommand("joinhub", "Verwalte die JoinHubs des Servers").addSubcommands(joinhubaddcmd, joinhubvariablescmd).setGuildOnly(true).queue();
+        jda.upsertCommand("joinhubs", "Siehe die JoinHubs des Servers").setGuildOnly(true).queue();
+
+        SubcommandData tempchannelnamecmd = new SubcommandData("name", "Verwalte den TempChannel Namen").addOption(OptionType.STRING, "name", "Gebe den neuen Namen an", true);
+        SubcommandData tempchannellimitcmd = new SubcommandData("limit", "Verwalte das TempChannel Limit").addOption(OptionType.INTEGER, "limit", "Gebe das neue Limit an", true);
+        SubcommandData tempchannellockcmd = new SubcommandData("lock", "Sperre deinen TempChannel");
+        SubcommandData tempchannelunlockcmd = new SubcommandData("unlock", "Entsperre deinen TempChannel");
+        SubcommandData tempchannelhidecmd = new SubcommandData("hide", "Verstecke deinen TempChannel");
+        SubcommandData tempchannelunhide = new SubcommandData("unhide", "Mache deinen TempChannel wieder sichtbar");
+        SubcommandData tempchanneladdmodcmd = new SubcommandData("add-mod", "Füge einen TempChannel Mod hinzu").addOption(OptionType.USER, "user", "Wähle einen User", true);
+        SubcommandData tempchannelremovemodcmd = new SubcommandData("remove-mod", "Entferne einen TempChannel Mod").addOption(OptionType.USER, "user", "Wähle einen User", true);
+        SubcommandData tempchanneltransfercmd = new SubcommandData("transfer", "Übertrage die Eigentumsrechte des TempChannels").addOption(OptionType.USER, "user", "Wähle einen User", true);
+        SubcommandData tempchannelkickcmd = new SubcommandData("kick", "Kick einen User aus dem TempChannel").addOption(OptionType.MENTIONABLE, "user", "Wähle einen User", true);
+        SubcommandData tempchannelbancmd = new SubcommandData("ban", "Banne einen User aus dem TempChannel").addOption(OptionType.USER, "user", "Wähle einen User", true);
+        SubcommandData tempchannelunbancmd = new SubcommandData("unban", "Entbanne einen User aus dem TempChannel").addOption(OptionType.USER, "user", "Wähle einen User", true);
+        jda.upsertCommand("tempchannel", "Verwalte deinen TempChannel")
+                .addSubcommands(tempchannelnamecmd, tempchannellimitcmd, tempchannellockcmd, tempchannelunlockcmd, tempchannelhidecmd, tempchannelunhide, tempchanneladdmodcmd, tempchannelremovemodcmd, tempchanneltransfercmd, tempchannelkickcmd, tempchannelbancmd, tempchannelunbancmd)
+                .setGuildOnly(true).queue();
+
     }
 
     private Runnable statusTask(JDA jda) {
