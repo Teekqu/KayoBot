@@ -2,6 +2,8 @@ package utils;
 
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
+import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -540,6 +542,217 @@ public class KGuild {
             return true;
         } catch(Exception err) {
             try { stm.close(); } catch(Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+
+    public Collection<VoiceChannel> getJoinHubs() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<VoiceChannel> channels = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM JoinHubs WHERE guildId="+this.getId());
+            while(rs.next()) {
+                VoiceChannel ch = this.g.getVoiceChannelById(rs.getString(2));
+                if(ch == null) continue;
+                channels.add(ch);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return channels;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getJoinHub(VoiceChannel ch) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM JoinHubs WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("guildId", this.g.getId());
+            map.put("channelId", rs.getString(2));
+            map.put("categoryId", rs.getString(3));
+            map.put("name", rs.getString(4));
+            map.put("limit", rs.getString(5));
+            try { stm.close(); } catch (Exception ignored) { }
+            return map;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public boolean addJoinHub(VoiceChannel ch, Category category, String name, int limit) {
+        if(this.getJoinHub(ch) != null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            long categoryId = 0;
+            if(category != null) categoryId = category.getIdLong();
+            stm.execute("INSERT INTO JoinHubs(guildId, channelId, categoryId, name, limit) VALUES("+this.g.getId()+","+ch.getId()+","+categoryId+",'"+name+"',"+limit+");");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean editJoinHub(VoiceChannel ch, Category category, String name, int limit) {
+        if(this.getJoinHub(ch) == null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            long categoryId = 0;
+            if(category != null) categoryId = category.getIdLong();
+            stm.execute("UPDATE JoinHubs SET categoryId="+categoryId+",name='"+name+"',limit="+limit+" WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean removeJoinHub(VoiceChannel ch) {
+        if(this.getJoinHub(ch) == null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM JoinHubs WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public Collection<VoiceChannel> getTempChannels() {
+        Statement stm = MySQL.connect();
+        try {
+            Collection<VoiceChannel> channels = new ArrayList<>();
+            ResultSet rs = stm.executeQuery("SELECT * FROM TempChannels WHERE guildId="+this.getId());
+            while(rs.next()) {
+                VoiceChannel ch = this.g.getVoiceChannelById(rs.getString(2));
+                if(ch == null) continue;
+                channels.add(ch);
+            }
+            try { stm.close(); } catch (Exception ignored) { }
+            return channels;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public HashMap<String, String> getTempChannel(VoiceChannel ch) {
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT * FROM TempChannels WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            HashMap<String, String> map = new HashMap<>();
+            map.put("guildId", this.g.getId());
+            map.put("channelId", rs.getString(2));
+            map.put("userId", rs.getString(3));
+            map.put("modIds", rs.getString(4));
+            map.put("bans", rs.getString(5));
+            try { stm.close(); } catch (Exception ignored) { }
+            return map;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return null;
+        }
+    }
+    public Collection<User> getMods(VoiceChannel ch) {
+        if(this.getTempChannel(ch) == null) return new ArrayList<>();
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT modIds FROM TempChannels WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            Collection<User> users = new ArrayList<>();
+            String[] ids = rs.getString(1).split(";");
+            try { stm.close(); } catch (Exception ignored) { }
+            for(String id : ids) {
+                User u = this.g.getJDA().getUserById(id);
+                if(u == null) continue;
+                users.add(u);
+            }
+            return users;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public Collection<User> getBans(VoiceChannel ch) {
+        if(this.getTempChannel(ch) == null) return new ArrayList<>();
+        Statement stm = MySQL.connect();
+        try {
+            ResultSet rs = stm.executeQuery("SELECT bans FROM TempChannels WHERE guildId="+this.getId()+" AND channelId="+ch.getId());
+            if(!rs.next()) {
+                try { stm.close(); } catch (Exception ignored) { }
+                return null;
+            }
+            Collection<User> users = new ArrayList<>();
+            String[] ids = rs.getString(1).split(";");
+            try { stm.close(); } catch (Exception ignored) { }
+            for(String id : ids) {
+                User u = this.g.getJDA().getUserById(id);
+                if(u == null) continue;
+                users.add(u);
+            }
+            return users;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return new ArrayList<>();
+        }
+    }
+    public boolean addTempChannel(VoiceChannel ch, User user) {
+        if(this.getTempChannel(ch) != null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("INSERT INTO TempChannels(guildId,channelId,userId,modIds,bans) VALUES("+this.g.getId()+","+ch.getId()+","+user.getId()+",'0;','0;');");
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean editTempChannel(VoiceChannel ch, User user, String modIds, String bans) {
+        if(this.getTempChannel(ch) == null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("UPDATE TempChannels SET userId="+user.getId()+",modIDs='"+modIds+"',bans='"+bans+"' WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
+            err.printStackTrace();
+            return false;
+        }
+    }
+    public boolean removeTempChannel(VoiceChannel ch) {
+        if(this.getJoinHub(ch) == null) return false;
+        Statement stm = MySQL.connect();
+        try {
+            stm.execute("DELETE FROM TempChannels WHERE guildId="+this.g.getId()+" AND channelId="+ch.getId());
+            try { stm.close(); } catch (Exception ignored) { }
+            return true;
+        } catch (Exception err) {
+            try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return false;
         }
