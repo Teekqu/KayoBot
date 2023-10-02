@@ -28,7 +28,7 @@ public class Info extends ListenerAdapter {
         InteractionHook ih = e.deferReply(false).complete();
 
         EmbedBuilder embed = new EmbedBuilder()
-                .setTitle(Emojis.kayo() + " │ "+bot.getName()+" - Informationen")
+                .setTitle(Emojis.bot() + " │ "+bot.getName()+" - Informationen")
                 .setDescription("In diesem Menü findest du aktuelle Informationen über "+bot.getName()+"!")
                 .setColor(Get.embedColor())
                 .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
@@ -36,7 +36,7 @@ public class Info extends ListenerAdapter {
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
 
                 .addBlankField(false)
-                .addField(Emojis.kayo()+" - Name", bot.getName(), true)
+                .addField(Emojis.bot()+" - Name", bot.getName(), true)
                 .addField(Emojis.idea()+" - ID", bot.getId(), true)
                 .addField(Emojis.crone()+" - Entwickler", "["+Get.timo().getUsername()+"]("+Get.timo().getProfileUrl()+")", true)
                 .addBlankField(false)
@@ -45,7 +45,7 @@ public class Info extends ListenerAdapter {
                 .addField(Emojis.wumpus()+" - Server", ""+e.getJDA().getGuilds().size(), true)
                 .addBlankField(false)
                 .addField(Emojis.user()+" - User", ""+e.getJDA().getUsers().size(), true)
-                .addField(Emojis.slash()+" - Commands", ""+e.getJDA().retrieveCommands().complete().size(), true)
+                .addField(Emojis.code()+" - Commands", ""+e.getJDA().retrieveCommands().complete().size(), true)
                 .addField(Emojis.vote()+" - Votes", ""+Get.topggVotes(), true);
 
         Button btn1 = Button.link(Get.inviteLink(), "Einladen").withEmoji(Emoji.fromFormatted(Emojis.link()));

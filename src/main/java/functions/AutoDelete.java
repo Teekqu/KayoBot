@@ -177,15 +177,15 @@ public class AutoDelete extends ListenerAdapter {
                 .setThumbnail(g.getIconUrl())
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                 .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                 .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
         Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-        Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+        Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
         Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
         Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
         if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-        if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+        if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
         if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
 
         ih.editOriginalEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
@@ -242,7 +242,7 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(e.getGuild().getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin())).withDisabled(true);
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash())).withDisabled(true);
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot())).withDisabled(true);
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user())).withDisabled(true);
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete())).withDisabled(true);
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
@@ -273,15 +273,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());
@@ -312,15 +312,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());
@@ -351,15 +351,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());
@@ -390,15 +390,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());
@@ -429,15 +429,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());
@@ -468,15 +468,15 @@ public class AutoDelete extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                     .addField(Emojis.pin()+" - Pins löschen", delPins, true)
-                    .addField(Emojis.slash()+" - Bot Nachrichten löschen", delBots, true)
+                    .addField(Emojis.bot()+" - Bot Nachrichten löschen", delBots, true)
                     .addField(Emojis.user()+" - User Nachrichten löschen", delUser, true);
 
             Button btn1 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelPins", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            Button btn2 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelBots", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             Button btn3 = Button.success("autodelete.btn.show."+ch.getId()+".enableDelUser", "Aktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             Button btn4 = Button.danger("autodelete.btn.show."+ch.getId()+".delete", "Löschen").withEmoji(Emoji.fromFormatted(Emojis.delete()));
             if(delPins.equals(Emojis.yes())) btn1 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelPins", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.pin()));
-            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.slash()));
+            if(delBots.equals(Emojis.yes())) btn2 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelBots", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.bot()));
             if(delUser.equals(Emojis.yes())) btn3 = Button.danger("autodelete.btn.show."+ch.getId()+".disableDelUser", "Deaktivieren").withEmoji(Emoji.fromFormatted(Emojis.user()));
             e.editMessageEmbeds(embed.build()).setActionRow(btn1, btn2, btn3, btn4).queue();
             this.activeUsers.remove(u.getIdLong());

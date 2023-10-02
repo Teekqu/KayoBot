@@ -1,6 +1,5 @@
 package Kayo;
 
-import com.sun.net.httpserver.HttpServer;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.OnlineStatus;
@@ -8,20 +7,19 @@ import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
-
-import java.net.InetSocketAddress;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
+import utils.Config;
 
 public class Kayo {
 
     private static JDA jda;
     public static boolean isReady = false;
+    public static String errorMessage = null;
+    private static Config config;
 
     public static void main(String[] args) {
+        config = new Config();
 
-        String token = "MTEyNDc4NTEzMzAwMjY4NjUyNA.G68Bhq.K7-V6t7ks8neHv0RWsxbqBMerIBcGJgVWaDUvM"; // Main Bot
-        // String token = "MTEyNTA5NTY3MjA2NTA0ODY1Ng.GA75pJ.hxXkEyzi4W0PL80mWBRISRyGV-CtpkgjOSZVLM"; // Test Bot
+        String token = config.get("token").toString();
         jda = JDABuilder.createLight(token)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
                 .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
@@ -29,22 +27,6 @@ public class Kayo {
                 .setActivity(Activity.playing("booting up"))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .build();
-
-        /* Web Server */
-        try {
-            ThreadPoolExecutor threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(10);
-            HttpServer httpServer = HttpServer.create(new InetSocketAddress("37.114.32.239", 1005), 0);
-
-            httpServer.createContext("/kayo/topgg/vote/", new webserver.Topgg());
-
-            httpServer.setExecutor(threadPoolExecutor);
-            httpServer.start();
-            System.out.println("[HTTP] Server started at " + httpServer.getAddress().getAddress() + ":" + httpServer.getAddress().getPort());
-
-        } catch (Exception err) {
-            System.out.println("[HTTP] Failed to start the webserver");
-            err.printStackTrace();
-        }
 
 
         // Events

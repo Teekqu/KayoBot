@@ -518,7 +518,7 @@ public class TempChannels extends ListenerAdapter {
                 .setThumbnail(g.getIconUrl())
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                 .addField(Emojis.channel()+" - Kategorie", categoryValue, true)
-                .addField(Emojis.slash()+" - Standard Name", name, true)
+                .addField(Emojis.bot()+" - Standard Name", name, true)
                 .addField(Emojis.user()+" - Standard Limit", String.valueOf(limit), true);
         Button btn1 = Button.primary("joinhubs.btn.edit."+ch.getId()+".name", "Namen ändern").withEmoji(Emoji.fromFormatted(Emojis.pen()));
         Button btn2 = Button.primary("joinhubs.btn.edit."+ch.getId()+".limit", "Limit ändern").withEmoji(Emoji.fromFormatted(Emojis.pin()));
@@ -650,7 +650,7 @@ public class TempChannels extends ListenerAdapter {
                 .setThumbnail(g.getIconUrl())
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                 .addField(Emojis.channel()+" - Kategorie", categoryValue, true)
-                .addField(Emojis.slash()+" - Standard Name", name, true)
+                .addField(Emojis.bot()+" - Standard Name", name, true)
                 .addField(Emojis.user()+" - Standard Limit", String.valueOf(limit), true);
         Button btn1 = Button.primary("joinhubs.btn.edit."+ch.getId()+".name", "Namen ändern").withEmoji(Emoji.fromFormatted(Emojis.pen()));
         Button btn2 = Button.primary("joinhubs.btn.edit."+ch.getId()+".limit", "Limit ändern").withEmoji(Emoji.fromFormatted(Emojis.pin()));

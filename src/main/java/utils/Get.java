@@ -56,9 +56,6 @@ public class Get {
     public static KUser timo() {
         return new KUser(Kayo.Kayo.getJda().getUserById("473737542630637569"));
     }
-    public static KUser killer() {
-        return new KUser(Kayo.Kayo.getJda().getUserById("619859148741279815"));
-    }
     public static String inviteLink() {
         return "https://discord.com/api/oauth2/authorize?client_id="+Kayo.Kayo.getJda().getSelfUser().getId()+"&permissions=8&scope=bot%20applications.commands";
     }

@@ -103,7 +103,7 @@ public class AutoReact extends ListenerAdapter {
             if(liste.toString().equals("")) liste.append(Emojis.warning()+" *Es wurden keine Einträge gefunden!*");
 
             EmbedBuilder embed = new EmbedBuilder()
-                    .setTitle(Emojis.emoji() + " | **AutoReact**")
+                    .setTitle(Emojis.wumpus() + " | **AutoReact**")
                     .setDescription(liste.toString())
                     .setColor(Get.embedColor())
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
@@ -164,7 +164,7 @@ public class AutoReact extends ListenerAdapter {
                         .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                         .setThumbnail(e.getGuild().getIconUrl())
                         .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
-                Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.emoji())).withDisabled(true);
+                Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.wumpus())).withDisabled(true);
                 Button btn2 = Button.danger("autoreact.btn.show."+ch.getId()+".delete", "Alle löschen").withEmoji(Emoji.fromFormatted(Emojis.channel())).withDisabled(true);
                 ih.editOriginalEmbeds(embed.build()).setActionRow(btn1, btn2).queue();
                 return;
@@ -190,7 +190,7 @@ public class AutoReact extends ListenerAdapter {
                 .setFooter(u.getUsername(), u.getEffectiveAvatarUrl())
                 .addField(Emojis.list()+" - Emojis", sb.toString(), true);
 
-        Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.emoji()));
+        Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.wumpus()));
         Button btn2 = Button.danger("autoreact.btn.show."+ch.getId()+".delete", "Alle löschen").withEmoji(Emoji.fromFormatted(Emojis.channel()));
         ih.editOriginalEmbeds(embed.build()).setActionRow(btn1, btn2).queue();
 
@@ -248,7 +248,7 @@ public class AutoReact extends ListenerAdapter {
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                     .setThumbnail(e.getGuild().getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
-            Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.emoji())).withDisabled(true);
+            Button btn1 = Button.danger("autoreact.btn.show."+ch.getId()+".deleteEmoji", "Emoji löschen").withEmoji(Emoji.fromFormatted(Emojis.wumpus())).withDisabled(true);
             Button btn2 = Button.danger("autoreact.btn.show."+ch.getId()+".delete", "Alle löschen").withEmoji(Emoji.fromFormatted(Emojis.channel())).withDisabled(true);
             ih.editOriginalEmbeds(embed.build()).setActionRow(btn1, btn2).queue();
         }
