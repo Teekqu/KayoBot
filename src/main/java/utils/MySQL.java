@@ -10,7 +10,7 @@ public class MySQL {
     private static final String port = "3306";
     private static final String db = "Kayo";
     private static final String user = "Kayo";
-    private static final String password = "v[EkUI9KjV4fgcZv";
+    private static final String password = "dcrt4wCyHKKT[0Qs";
 
     public static Statement connect() {
 
