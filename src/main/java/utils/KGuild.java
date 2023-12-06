@@ -218,7 +218,6 @@ public class KGuild {
 
     }
     public boolean removeAutoReact(GuildMessageChannel ch, Emoji emoji) {
-        System.out.println(emoji.getFormatted());
         if(this.getAutoReact(ch)==null || !this.getAutoReact(ch).contains(emoji)) return false;
         Statement stm = MySQL.connect();
         try {
