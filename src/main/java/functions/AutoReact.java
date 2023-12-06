@@ -110,7 +110,7 @@ public class AutoReact extends ListenerAdapter {
                     .setThumbnail(g.getIconUrl())
                     .setFooter(u.getUsername(), u.getEffectiveAvatarUrl());
             boolean disabled = false;
-            if(options.size() == 0) {
+            if(options.isEmpty()) {
                 options.add(SelectOption.of("None", "none.none.none"));
                 disabled = true;
             }
