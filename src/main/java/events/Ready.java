@@ -43,7 +43,7 @@ public class Ready extends ListenerAdapter {
     private void loadCommands() {
 
         JDA jda = Kayo.Kayo.getJda();
-        Guild g = jda.getGuildById("1132022985209954415");
+        Guild g = jda.getGuildById("1124803921978871850");
         if(g == null) return;
 
         /* COMMANDS */
