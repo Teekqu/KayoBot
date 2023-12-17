@@ -88,7 +88,7 @@ public class GuildRemove extends ListenerAdapter {
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant());
 
             Button btn = Button.primary("guild.leave.btn.review."+g.getId(), "Bewerten").withEmoji(Emoji.fromFormatted(Emojis.vote()));
-            user.openPrivateChannel().complete().sendMessageEmbeds(embed.build()).setActionRow(btn).queue();
+            try { user.openPrivateChannel().complete().sendMessageEmbeds(embed.build()).setActionRow(btn).queue(); } catch (Exception ignored) { }
 
         }
 
