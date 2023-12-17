@@ -87,7 +87,7 @@ public class GuildRemove extends ListenerAdapter {
                     .setFooter(null, "https://i.timo1005.de/Kayo.png")
                     .setTimestamp(TimeFormat.RELATIVE.now().toInstant());
 
-            Button btn = Button.primary("guild.leave.btn.review."+g.getId(), "Bewerten").withEmoji(Emoji.fromFormatted(Emojis.vote()));
+            Button btn = Button.primary("guild.leave.btn.review."+g.getId()+"."+g.getName().replaceAll("\\.", "[point]"), "Bewerten").withEmoji(Emoji.fromFormatted(Emojis.vote()));
             try { user.openPrivateChannel().complete().sendMessageEmbeds(embed.build()).setActionRow(btn).queue(); } catch (Exception ignored) { }
 
         }
@@ -104,13 +104,13 @@ public class GuildRemove extends ListenerAdapter {
                 .setMaxLength(250)
                 .setRequired(true)
                 .build();
-        TextInput description = TextInput.create("description", "Gebe uns genauere Informationen zum Problem. (Optional)", TextInputStyle.PARAGRAPH)
+        TextInput description = TextInput.create("description", "Gebe uns genauere Informationen zum Problem.", TextInputStyle.PARAGRAPH)
                 .setPlaceholder("Es gab einen Bug, Mir hat das Design nicht gefallen, ...")
                 .setMinLength(10)
                 .setMaxLength(3000)
                 .setRequired(false)
                 .build();
-        Modal modal = Modal.create("guild.leave.modal."+e.getButton().getId().substring(23), "Was hat dir an Kayo nicht gefallen?")
+        Modal modal = Modal.create("guild.leave.modal."+e.getButton().getId().split("\\.")[4]+"."+e.getButton().getId().split("\\.")[5], "Was hat dir an Kayo nicht gefallen?")
                 .addActionRow(system)
                 .addActionRow(description)
                 .build();
@@ -129,12 +129,13 @@ public class GuildRemove extends ListenerAdapter {
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(Emojis.vote() + " | **Neue Bewertung**")
-                .setDescription("**User:** "+e.getUser().getName()+"\n**Server:** "+e.getJDA().getGuildById(e.getModalId().split("\\.")[3]).getName()+"\n\r> **Was am Bot hat dir nicht gefallen?**\n"+system+"\n\r> **Gebe uns genauere Informationen zum Problem. (Optional)**\n"+description)
+                .setDescription("**User:** "+e.getUser().getName()+"\n**Server:** "+e.getModalId().split("\\.")[4]+" ("+e.getModalId().split("\\.")[3]+")\n\r> **Was am Bot hat dir nicht gefallen?**\n"+system+"\n\r> **Gebe uns genauere Informationen zum Problem.**\n"+description)
                 .setColor(Get.embedColor())
                 .setTimestamp(TimeFormat.RELATIVE.now().toInstant())
                 .setThumbnail(e.getUser().getEffectiveAvatarUrl())
                 .setFooter("Bewertet über guild.leave.modal", e.getJDA().getSelfUser().getEffectiveAvatarUrl());
         e.getJDA().getGuildById("1124803921978871850").getTextChannelById("1185900962603347989").sendMessageEmbeds(embed.build()).queue();
+        e.getMessage().editMessageEmbeds(e.getMessage().getEmbeds()).setActionRow(Button.primary("guild.leave.btn.review.123.123", "Bewerten").withEmoji(Emoji.fromFormatted(Emojis.vote())).withDisabled(true)).queue();
 
         e.reply(Emojis.yes()+" | **Vielen Dank für deine Bewertung!**\n"+Emojis.yes()+" | **Die Bewertung wurde an das Entwicklungsteam weitergeleitet.**").setEphemeral(true).queue();
 
