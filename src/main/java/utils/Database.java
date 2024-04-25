@@ -27,12 +27,13 @@ public class Database {
         this.maxConnections = maxConnections;
     }
 
-    public void connect() {
+    public Database connect() {
         this.dataSource = new HikariDataSource();
         this.dataSource.setJdbcUrl("jdbc:mariadb://" + ip + ":" + port + "/" + database);
         this.dataSource.setUsername(this.username);
         this.dataSource.setPassword(this.password);
         this.dataSource.setMaximumPoolSize(this.maxConnections);
+        return this;
     }
 
     public ResultSet executeQuery(String sql) throws SQLException {

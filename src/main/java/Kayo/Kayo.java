@@ -60,7 +60,7 @@ public class Kayo {
                 config.get("database.username").toString(),
                 config.get("database.password").toString(),
                 Integer.parseInt(config.get("database.maxConnections").toString())
-        );
+        ).connect();
 
 
         // Events
