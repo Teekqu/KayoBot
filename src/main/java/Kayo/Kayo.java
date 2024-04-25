@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.requests.GatewayIntent;
 import net.dv8tion.jda.api.utils.MemberCachePolicy;
 import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import utils.Config;
+import utils.Database;
 
 import java.net.InetSocketAddress;
 import java.util.concurrent.Executors;
@@ -17,6 +18,8 @@ import java.util.concurrent.ThreadPoolExecutor;
 public class Kayo {
 
     private static JDA jda;
+
+    private static Database database;
     public static boolean isReady = false;
     public static String errorMessage = null;
     private static Config config;
@@ -49,6 +52,16 @@ public class Kayo {
             err.printStackTrace();
         }
 
+        /* Database */
+        database = new Database(
+                config.get("database.ip").toString(),
+                Integer.parseInt(config.get("database.port").toString()),
+                config.get("database.database").toString(),
+                config.get("database.username").toString(),
+                config.get("database.password").toString(),
+                Integer.parseInt(config.get("database.maxConnections").toString())
+        );
+
 
         // Events
         jda.addEventListener(new events.Ready());
@@ -76,6 +89,9 @@ public class Kayo {
 
     public static JDA getJda() {
         return jda;
+    }
+    public static Database getDatabase() {
+        return database;
     }
 
 }

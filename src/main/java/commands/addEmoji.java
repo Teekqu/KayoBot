@@ -25,7 +25,7 @@ public class addEmoji extends ListenerAdapter {
 
         if(u.isBlocked()) return;
 
-        if(!e.getMember().hasPermission(Permission.MANAGE_EMOJIS_AND_STICKERS)) {
+        if(!e.getMember().hasPermission(Permission.MANAGE_GUILD_EXPRESSIONS)) {
             e.replyEmbeds(Embeds.error(g, u, "Dir fehlen nötige Rechte")).setEphemeral(true).queue();
             return;
         }

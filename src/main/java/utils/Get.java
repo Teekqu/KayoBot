@@ -1,5 +1,6 @@
 package utils;
 
+import Kayo.Kayo;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.utils.TimeFormat;
 import org.json.JSONObject;
@@ -14,7 +15,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.http.HttpClient;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -28,39 +28,37 @@ public class Get {
         return Color.decode("#ff0000");
     }
     public static Long id(String key, boolean addOne) {
-        Statement stm = MySQL.connect();
         try {
-            ResultSet rs = stm.executeQuery("SELECT value FROM IDs WHERE key="+key+";");
+            ResultSet rs = Kayo.getDatabase().executeQuery("SELECT value FROM IDs WHERE key='" + key + "';");
             if(!rs.next()) {
                 if(addOne) {
-                    stm.execute("INSERT INTO IDs(key, value) VALUES('"+key+"',1);");
-                    try { stm.close(); } catch (Exception ignored) { }
+                    Kayo.getDatabase().execute("INSERT INTO IDs(key, value) VALUES('"+key+"',1);");
+                    try { rs.close(); } catch (Exception ignored) { }
                     return 1L;
                 }
                 return 0L;
             }
             long value = Long.parseLong(rs.getString(1));
             if(addOne) {
-                stm.execute("UPDATE IDs SET value="+(value+1)+" WHERE key='"+key+"';");
-                try { stm.close(); } catch (Exception ignored) { }
+                Kayo.getDatabase().execute("UPDATE IDs SET value="+(value+1)+" WHERE key='"+key+"';");
+                try { rs.close(); } catch (Exception ignored) { }
                 return (value+1);
             }
-            try { stm.close(); } catch (Exception ignored) { }
+            try { rs.close(); } catch (Exception ignored) { }
             return value;
         } catch (Exception err) {
-            try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return null;
         }
     }
     public static KUser timo() {
-        return new KUser(Kayo.Kayo.getJda().getUserById("473737542630637569"));
+        return new KUser(Kayo.getJda().getUserById("473737542630637569"));
     }
     public static String inviteLink() {
-        return "https://discord.com/api/oauth2/authorize?client_id="+Kayo.Kayo.getJda().getSelfUser().getId()+"&permissions=8&scope=bot%20applications.commands";
+        return "https://discord.com/api/oauth2/authorize?client_id="+Kayo.getJda().getSelfUser().getId()+"&permissions=8&scope=bot%20applications.commands";
     }
     public static String topggVoteLink() {
-        return "https://top.gg/bot/"+Kayo.Kayo.getJda().getSelfUser().getId()+"/vote";
+        return "https://top.gg/bot/"+Kayo.getJda().getSelfUser().getId()+"/vote";
     }
     public static long topggVotes() {
 
@@ -93,43 +91,39 @@ public class Get {
         }
     }
     public static Collection<User> voteReminders(boolean onlyToRemind) {
-        Statement stm = MySQL.connect();
         try {
             Collection<User> users = new ArrayList<>();
-            ResultSet rs = stm.executeQuery("SELECT * FROM VoteReminder");
+            ResultSet rs = Kayo.getDatabase().executeQuery("SELECT * FROM VoteReminder");
             while(rs.next()) {
 
-                User user = Kayo.Kayo.getJda().getUserById(rs.getString(1));
+                User user = Kayo.getJda().getUserById(rs.getString(1));
                 if(user==null) continue;
                 KUser u = new KUser(user);
                 if(onlyToRemind && (u.getLastVote()+43200) <= TimeFormat.RELATIVE.now().toInstant().getEpochSecond()) users.add(user);
                 if(!onlyToRemind) users.add(user);
 
             }
-            try { stm.close(); } catch (Exception ignored) { }
+            try { rs.close(); } catch (Exception ignored) { }
             return users;
         } catch (Exception err) {
-            try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return new ArrayList<>();
         }
     }
 
     public static int limit(String id, boolean hasPremium) {
-        Statement stm = MySQL.connect();
         try {
-            ResultSet rs = stm.executeQuery("SELECT * FROM Limits WHERE id='"+id+"';");
+            ResultSet rs = Kayo.getDatabase().executeQuery("SELECT * FROM Limits WHERE id='"+id+"';");
             if(!rs.next()) {
-                try { stm.close(); } catch (Exception ignored) { }
+                try { rs.close(); } catch (Exception ignored) { }
                 return 0;
             }
             int normaly = Integer.parseInt(rs.getString("count"));
             int premium = Integer.parseInt(rs.getString("countPremium"));
-            try { stm.close(); } catch (Exception ignored) { }
+            try { rs.close(); } catch (Exception ignored) { }
             if(hasPremium) return premium;
             return normaly;
         } catch (Exception err) {
-            try { stm.close(); } catch (Exception ignored) { }
             err.printStackTrace();
             return 0;
         }
