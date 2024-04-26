@@ -57,7 +57,7 @@ public class Ready extends ListenerAdapter {
                 .addOption(OptionType.USER, "user", "Wähle einen User", false)
                 .setGuildOnly(true).queue();
         jda.upsertCommand("roleinfo", "Siehe Informationen über eine Rolle an")
-                .addOption(OptionType.ROLE, "role", "Wähle eine Rolle", false)
+                .addOption(OptionType.ROLE, "role", "Wähle eine Rolle", true)
                 .setGuildOnly(true).queue();
 
         /* FUNCTIONS */

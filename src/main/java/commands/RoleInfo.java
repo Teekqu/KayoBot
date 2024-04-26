@@ -35,6 +35,8 @@ public class RoleInfo extends ListenerAdapter {
 
         InteractionHook ih = e.deferReply(false).complete();
 
+        int count = e.getGuild().findMembersWithRoles(r).get().size();
+
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(Emojis.role()+" | **Role Info**")
                 .setDescription("**Rolle:** "+r.getAsMention()+" ["+r.getName()+"]")
@@ -46,8 +48,11 @@ public class RoleInfo extends ListenerAdapter {
                 .addBlankField(false)
                 .addField(Emojis.pen()+" - Name", r.getName(), true)
                 .addField(Emojis.idea()+" - ID", r.getId(), true)
-                .addField(Emojis.pin()+" - Color", (r.getColor() == null ? "#000000" : Convert.colorToHex(r.getColor())), true)
-                .addBlankField(false);
+                .addField(Emojis.stats()+" - Color", (r.getColor() == null ? "#000000" : Convert.colorToHex(r.getColor())), true)
+                .addBlankField(false)
+                .addField(Emojis.user()+" - Usercount", String.valueOf(count), true)
+                .addField(Emojis.pin()+" - Hoisted", r.isHoisted() ? Emojis.yes() : Emojis.no(), true)
+                .addField(Emojis.clock()+" - Erstellt", "<t:"+r.getTimeCreated().toInstant().getEpochSecond()+"> (<t:"+r.getTimeCreated().toInstant().getEpochSecond()+":R>)", true);
 
         String url = (r.getIcon() == null ? "https://i.timo1005.de/Kayo.png" : r.getIcon().getIconUrl());
         Button btn1 = Button.link(url, "Icon").withEmoji(Emoji.fromFormatted(Emojis.link())).withDisabled(url.equals("https://i.timo1005.de/Kayo.png"));
