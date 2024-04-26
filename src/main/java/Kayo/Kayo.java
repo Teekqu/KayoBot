@@ -73,6 +73,7 @@ public class Kayo {
         jda.addEventListener(new commands.addEmoji());
         jda.addEventListener(new commands.Serverinfo());
         jda.addEventListener(new commands.Userinfo());
+        jda.addEventListener(new commands.RoleInfo());
         jda.addEventListener(new commands.Ping());
 
         // Functions

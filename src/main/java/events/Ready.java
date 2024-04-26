@@ -56,6 +56,9 @@ public class Ready extends ListenerAdapter {
         jda.upsertCommand("userinfo", "Siehe Informationen über einen User an")
                 .addOption(OptionType.USER, "user", "Wähle einen User", false)
                 .setGuildOnly(true).queue();
+        jda.upsertCommand("roleinfo", "Siehe Informationen über eine Rolle an")
+                .addOption(OptionType.ROLE, "role", "Wähle eine Rolle", false)
+                .setGuildOnly(true).queue();
 
         /* FUNCTIONS */
         OptionData createautodeletedata1 = new OptionData(OptionType.CHANNEL, "channel", "Wähle einen Kanal", true)
