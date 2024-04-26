@@ -2,6 +2,7 @@ package commands;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.Permission;
+import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
@@ -33,9 +34,9 @@ public class RoleInfo extends ListenerAdapter {
 
         Role r = e.getOption("role").getAsRole();
 
-        InteractionHook ih = e.deferReply(false).complete();
+        InteractionHook ih = e.deferReply(true).complete();
 
-        int count = e.getGuild().findMembersWithRoles(r).get().size();
+        int count = e.getGuild().getMembersWithRoles(r).size();
 
         EmbedBuilder embed = new EmbedBuilder()
                 .setTitle(Emojis.role()+" | **Role Info**")
