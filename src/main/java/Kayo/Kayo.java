@@ -30,8 +30,13 @@ public class Kayo {
         String token = config.get("token").toString();
         jda = JDABuilder.createLight(token)
                 .setMemberCachePolicy(MemberCachePolicy.ALL)
-                .enableIntents(GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS))
-                .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.ACTIVITY, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.FORUM_TAGS)
+                .enableIntents(GatewayIntent.getIntents(GatewayIntent.DEFAULT))
+                .enableIntents(
+                        GatewayIntent.AUTO_MODERATION_CONFIGURATION, GatewayIntent.AUTO_MODERATION_EXECUTION, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_MODERATION,
+                        GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_INVITES, GatewayIntent.GUILD_VOICE_STATES, GatewayIntent.GUILD_MESSAGE_REACTIONS,
+                        GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.DIRECT_MESSAGES, GatewayIntent.SCHEDULED_EVENTS, GatewayIntent.GUILD_WEBHOOKS,
+                        GatewayIntent.MESSAGE_CONTENT)
+                .enableCache(CacheFlag.MEMBER_OVERRIDES, CacheFlag.VOICE_STATE, CacheFlag.EMOJI, CacheFlag.STICKER, CacheFlag.FORUM_TAGS)
                 .setActivity(Activity.playing("booting up"))
                 .setStatus(OnlineStatus.DO_NOT_DISTURB)
                 .build();

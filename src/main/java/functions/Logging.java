@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.Member;
 import net.dv8tion.jda.api.entities.UserSnowflake;
+import net.dv8tion.jda.api.entities.channel.ChannelType;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
@@ -877,7 +878,7 @@ public class Logging extends ListenerAdapter {
                 .setThumbnail(g.getIconUrl())
 
                 .addField( "Server", g.getName(), true)
-                .addField( "Kanal", e.getChannel().getAsMention(), true);
+                .addField( "Kanal", e.getChannel().getName()+" ("+e.getChannel().getType().name()+")", true);
 
         channels.forEach(ch -> {
             this.sendWebhookInChannel(ch, embed);

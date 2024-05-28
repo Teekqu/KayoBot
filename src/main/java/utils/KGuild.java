@@ -3,6 +3,7 @@ package utils;
 import net.dv8tion.jda.api.entities.*;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.Category;
+import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
 import net.dv8tion.jda.api.entities.channel.concrete.VoiceChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
@@ -695,6 +696,16 @@ public class KGuild {
             err.printStackTrace();
             return false;
         }
+    }
+
+    public List<HashMap<String, String>> getTwitchChannels() {
+        return new ArrayList<>();
+    }
+    public boolean addTwitchChannel(String name, TextChannel channel, Role role) {
+        return true;
+    }
+    public boolean removeTwitchChannel(String name) {
+        return true;
     }
 
 }
